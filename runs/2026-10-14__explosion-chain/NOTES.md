@@ -1,0 +1,64 @@
+# Explosion-chain follow-up (prepared 2026-10-14, not yet scored)
+
+## Why
+
+All seven pilot models (`../2026-10-11__pilot-ollama/report.md`) accept disjunctive syllogism (DS,
+mean P(yes) 0.61–1.00) and reject explosion (0.00–0.28), in every content type including symbolic
+notation (`../2026-10-11__explosion-symbolic/`). No candidate logic gives that pair. C. I. Lewis's
+derivation gets explosion from two steps plus cut:
+
+1. A ⊢ A ∨ B (∨-introduction)
+2. A ∨ B, ¬A ⊢ B (DS)
+3. cut: A, ¬A ⊢ B
+
+This run asks which step the models refuse.
+
+## Schemata (gold verdicts computed by `battery/logics.py`, checked in `battery/test_table.py`)
+
+| Schema | Form | CL | IL | K3 | LP | FDE | QL | Role |
+|---|---|:-:|:-:|:-:|:-:|:-:|:-:|---|
+| disjunction_introduction | A ⊢ A∨B | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | step 1 |
+| identity_inconsistent | A, ¬A ⊢ A | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | does *anything* follow from inconsistent premises? |
+| explosion_lemma | A, ¬A, A∨B ⊢ B | ✓ | ✓ | ✓ | ✗ | ✗ | ✓ | step 2 with the inconsistent pair present |
+| double_ds | A∨B, ¬A, ¬B∨C ⊢ C | ✓ | ✓ | ✓ | ✗ | ✗ | ✗ | two chained steps, no contradiction |
+| explosion | A, ¬A ⊢ B | ✓ | ✓ | ✓ | ✗ | ✗ | ✓ | anchor (re-scored in the same run) |
+| disjunctive_syllogism | A∨B, ¬A ⊢ B | ✓ | ✓ | ✓ | ✗ | ✗ | ✗ | anchor |
+
+## Hypotheses and predicted pattern (binarised at 0.5), written before scoring
+
+| Hypothesis | ∨-intro | A,¬A ⊢ A | A,¬A,A∨B ⊢ B | double DS | DS | explosion |
+|---|:-:|:-:|:-:|:-:|:-:|:-:|
+| H_a relevance filter (conclusion must not introduce a new atom) | no | yes | yes | yes | yes | no |
+| H_b contradiction aversion (nothing follows from an inconsistent set) | yes | no | no | yes | yes | no |
+| H_c non-transitive consequence (every step accepted, cut refused) | yes | yes | yes | yes | yes | no |
+| H_d premise-set filter (DS fails only when a contradiction is present) | yes | yes | no | yes | yes | no |
+| Classical competence | yes | yes | yes | yes | yes | yes |
+| LP / FDE | yes | yes | no | no | no | no |
+
+Reading:
+- H_b: the explosion "no" is not about consequence at all; drop the "structural anomaly" claim.
+- H_a: rejection sits at ∨-introduction. Relevance logics (e.g. R) accept ∨-introduction and reject DS,
+  so this is not a relevance logic either; it is a surface filter on conclusion vocabulary.
+- H_c: the model's acceptance relation is not closed under cut, so no Tarskian consequence relation
+  fits. Candidate label, from memory and to be verified before use in writing: Tennant's Core Logic
+  (∨-introduction and DS valid, explosion invalid, unrestricted cut rejected). Strict–tolerant ST is
+  not a fit: it validates every classically valid inference, explosion included.
+- H_d: same conclusion as H_b for the paper (filtering, not a logic), but the filter is narrower.
+- `double_ds` separates "cut fails in general" from "cut fails only across a contradiction".
+
+`battery/fit.py` prints a **Chain decomposition** paragraph with this diagnosis when
+`disjunction_introduction` is among the scored schemata. The logic-fit tables in that report are
+secondary here (only explosion and DS are in its conditional-free list).
+
+## Items
+
+`items.jsonl`: 534 items. `generate.py --schemata disjunction_introduction identity_inconsistent
+explosion_lemma double_ds explosion disjunctive_syllogism --per-cell 10 --symbolic-per-cell 10 --seed 14`.
+Per schema: 10 everyday + 10 nonsense + 10 symbolic instances × 3 framings = 90, except
+`identity_inconsistent` symbolic = 24 (one atom, eight letters in the pool, so eight distinct instances).
+The pilot battery output of `generate.py` (no `--schemata`) is byte-identical to before the change.
+
+## Running
+
+`bash run.sh` scores the seven pilot models sequentially (needs Ollama on 127.0.0.1:11434, one model
+on the GPU at a time) and writes `report.md`. Skips models whose score file already has 534 lines.

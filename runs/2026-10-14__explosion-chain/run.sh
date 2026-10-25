@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# Score the explosion-chain items on the seven pilot models, one at a time, then write report.md.
+# Needs an Ollama server on 127.0.0.1:11434 (score.py). Re-runnable: finished models are skipped.
+set -euo pipefail
+cd "$(dirname "$0")"
+PY=/c/Users/user/AppData/Local/Programs/Python/Python312/python.exe
+N=$(wc -l < items.jsonl)
+
+run() {
+  local model=$1; shift
+  local out="scores__${model//:/_}.jsonl"
+  if [ -f "$out" ] && [ "$(wc -l < "$out")" -eq "$N" ]; then
+    echo "skip $model (done)"; return
+  fi
+  echo "== $model $*"
+  "$PY" ../../battery/score.py --model "$model" --items items.jsonl --out "$out" "$@"
+}
+
+run qwen2.5:7b-instruct
+run qwen3.5:9b --no-think
+run hermes3:8b
+run llama3.1:latest
+run qwen2.5:14b
+run qwen3-coder:30b
+run qwen3.8:27b --no-think
+
+"$PY" ../../battery/fit.py scores__*.jsonl --out report.md
