@@ -35,7 +35,9 @@ pip install -r requirements.txt
 - `2026-11-24__inconsistent-premises/`: is A, ¬A ⊢ A refused because of the contradiction or because of
   the contradicted atom; 4 models (results in `NOTES.md`).
 - `2026-11-24__mcs-inference/`: does inference from inconsistent premises follow maximal consistent
-  subsets (`battery/mcs.py`); prepared, not yet scored. `bash run.sh` (see `NOTES.md`).
+  subsets (`battery/mcs.py`); 4 models (results in `NOTES.md`).
+- `2026-11-24__inconsistent-formal/`: does the "no" to A, ¬A ⊢ A survive an explicit definition of
+  validity; prepared, not yet scored. `bash run.sh` (see `NOTES.md`).
 
 Dependencies are pinned in `requirements.txt`; each new score file gets a `.meta.json` with the
 Ollama model digest, decoding options and item-file hash. Pilot score files predate `score.py` writing metadata, so their model digests are not recorded.

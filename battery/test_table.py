@@ -33,6 +33,8 @@ EXPECTED = {
     "shared_conjunct":          [Y, Y, Y, Y, Y, Y],
     "clean_conjunct":           [Y, Y, Y, Y, Y, Y],
     "disjunction_introduction_inconsistent": [Y, Y, Y, Y, Y, Y],
+    # yes-bias control
+    "disjunct_from_disjunction": [N, N, N, N, N, N],
 }
 
 # Hand-derived verdicts of the maximal-consistent-subset relations (battery/mcs.py):  free, universal, existential
@@ -47,6 +49,7 @@ EXPECTED_MCS = {
     "adjunction_inconsistent":  [N, N, N],
     "explosion":                [N, N, N],
     "disjunctive_syllogism":    [Y, Y, Y],
+    "disjunct_from_disjunction": [N, N, N],
 }
 
 

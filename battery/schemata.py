@@ -60,4 +60,9 @@ MCS_SCHEMATA = {
     "disjunction_introduction_inconsistent": ([A, neg(A)], disj(A, B)),
 }
 
-ALL_SCHEMATA = {**SCHEMATA, **CHAIN_SCHEMATA, **INCONSISTENCY_SCHEMATA, **MCS_SCHEMATA}
+# Yes-bias control for the formal-framing check on inconsistent premises: invalid in every logic, conditional-free.
+CONTROL_SCHEMATA = {
+    "disjunct_from_disjunction": ([disj(A, B)], A),
+}
+
+ALL_SCHEMATA = {**SCHEMATA, **CHAIN_SCHEMATA, **INCONSISTENCY_SCHEMATA, **MCS_SCHEMATA, **CONTROL_SCHEMATA}

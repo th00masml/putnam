@@ -58,3 +58,9 @@ The preregistered hypothesis (qwen2.5:7b follows universal MCS consequence) is r
 A∧C, ¬A ⊢ C (mean 0.94). Its profile matches the pre-specified "discard the contradicted atom" row
 exactly. Its formalisation (`split_universal` in `battery/mcs.py`) was written after this result and is
 exploratory until tested in a new preregistered run. Details in the run's `NOTES.md`.
+
+## 2026-11-24: formal-framing check on inconsistent premises
+
+Added before any model has scored `runs/2026-11-24__inconsistent-formal/items.jsonl`, in response to a
+review of the preprint draft. Primary cell, bands and controls are in that run's `NOTES.md`. No earlier
+frozen value changes.
