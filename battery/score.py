@@ -8,17 +8,30 @@ Requires an Ollama server with logprobs support on localhost:11434.
 """
 
 import argparse
+import hashlib
 import json
 import math
 import time
 import urllib.request
 
 URL = "http://127.0.0.1:11434/api/chat"
+OPTIONS = {"num_predict": 1, "temperature": 0}
+TOP_LOGPROBS = 20
+
+
+def model_digest(model):
+    """Digest of the exact weights Ollama serves under this tag (tags like llama3.1:latest move)."""
+    req = urllib.request.Request(URL.replace("/api/chat", "/api/tags"))
+    with urllib.request.urlopen(req, timeout=60) as r:
+        for m in json.load(r)["models"]:
+            if m["name"] == model or m["model"] == model:
+                return m["digest"]
+    return None
 
 
 def p_yes(model, prompt, think, num_thread=None):
     body = {"model": model, "messages": [{"role": "user", "content": prompt}], "stream": False,
-            "logprobs": True, "top_logprobs": 20, "options": {"num_predict": 1, "temperature": 0}}
+            "logprobs": True, "top_logprobs": TOP_LOGPROBS, "options": dict(OPTIONS)}
     if num_thread:
         body["options"]["num_thread"] = num_thread
     if think is not None:
@@ -43,6 +56,13 @@ def main():
     think = False if args.no_think else None
 
     items = [json.loads(line) for line in open(args.items, encoding="utf-8")][: args.limit]
+    meta = {"model": args.model, "digest": model_digest(args.model), "options": OPTIONS, "top_logprobs": TOP_LOGPROBS,
+            "think": think, "num_thread": args.num_thread, "items": args.items,
+            "items_sha256": hashlib.sha256(open(args.items, "rb").read()).hexdigest(), "n_items": len(items),
+            "started": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
+            "prompt_template": "item['prompt'], and again with 'Answer yes or no.' -> 'Answer no or yes.'"}
+    with open(args.out.removesuffix(".jsonl") + ".meta.json", "w", encoding="utf-8") as fh:
+        json.dump(meta, fh, indent=2)
     start = time.time()
     with open(args.out, "w", encoding="utf-8") as fh:
         for i, it in enumerate(items):

@@ -3,7 +3,7 @@
 # Needs an Ollama server on 127.0.0.1:11434 (score.py). Re-runnable: finished models are skipped.
 set -euo pipefail
 cd "$(dirname "$0")"
-PY=/c/Users/user/AppData/Local/Programs/Python/Python312/python.exe
+PY=${PYTHON:-python}
 N=$(wc -l < items.jsonl)
 
 run() {
