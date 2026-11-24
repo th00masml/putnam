@@ -42,6 +42,8 @@ have yes/no mass < 0.5 (thresholds frozen in PREREGISTRATION.md).
 | IL | -484.0 | 1/2 | -1.79 | 0.550 | -125.6 |
 | K3 | -484.0 | 1/2 | -1.79 | 0.550 | -125.6 |
 
+*Only 2 schema(ta) in this analysis: each held-out fold fits eps on the other schema alone, so the held-out ranking is degenerate (a logic wrong on both can win). Read the mean P(yes) table instead.*
+
 ### Logic fit: all schemata (QL excluded)
 
 | Logic | Held-out-schema log-lik | Schemata agreeing | Schema-level log ML | Item agreement | Item log ML (inflated) |
@@ -51,6 +53,8 @@ have yes/no mass < 0.5 (thresholds frozen in PREREGISTRATION.md).
 | CL | -484.0 | 1/2 | -1.79 | 0.550 | -125.6 |
 | IL | -484.0 | 1/2 | -1.79 | 0.550 | -125.6 |
 | K3 | -484.0 | 1/2 | -1.79 | 0.550 | -125.6 |
+
+*Only 2 schema(ta) in this analysis: each held-out fold fits eps on the other schema alone, so the held-out ranking is degenerate (a logic wrong on both can win). Read the mean P(yes) table instead.*
 
 ### Mean P(yes) by schema and content
 
@@ -83,6 +87,8 @@ have yes/no mass < 0.5 (thresholds frozen in PREREGISTRATION.md).
 | LP | -391.0 | 1/2 | -1.79 | 0.550 | -125.6 |
 | FDE | -391.0 | 1/2 | -1.79 | 0.550 | -125.6 |
 
+*Only 2 schema(ta) in this analysis: each held-out fold fits eps on the other schema alone, so the held-out ranking is degenerate (a logic wrong on both can win). Read the mean P(yes) table instead.*
+
 ### Logic fit: all schemata (QL excluded)
 
 | Logic | Held-out-schema log-lik | Schemata agreeing | Schema-level log ML | Item agreement | Item log ML (inflated) |
@@ -92,6 +98,8 @@ have yes/no mass < 0.5 (thresholds frozen in PREREGISTRATION.md).
 | K3 | -254.7 | 1/2 | -1.79 | 0.450 | -128.0 |
 | LP | -391.0 | 1/2 | -1.79 | 0.550 | -125.6 |
 | FDE | -391.0 | 1/2 | -1.79 | 0.550 | -125.6 |
+
+*Only 2 schema(ta) in this analysis: each held-out fold fits eps on the other schema alone, so the held-out ranking is degenerate (a logic wrong on both can win). Read the mean P(yes) table instead.*
 
 ### Mean P(yes) by schema and content
 
@@ -124,6 +132,8 @@ have yes/no mass < 0.5 (thresholds frozen in PREREGISTRATION.md).
 | LP | -333.2 | 1/2 | -1.79 | 0.711 | -110.0 |
 | FDE | -333.2 | 1/2 | -1.79 | 0.711 | -110.0 |
 
+*Only 2 schema(ta) in this analysis: each held-out fold fits eps on the other schema alone, so the held-out ranking is degenerate (a logic wrong on both can win). Read the mean P(yes) table instead.*
+
 ### Logic fit: all schemata (QL excluded)
 
 | Logic | Held-out-schema log-lik | Schemata agreeing | Schema-level log ML | Item agreement | Item log ML (inflated) |
@@ -133,6 +143,8 @@ have yes/no mass < 0.5 (thresholds frozen in PREREGISTRATION.md).
 | K3 | -139.8 | 1/2 | -1.79 | 0.289 | -129.1 |
 | LP | -333.2 | 1/2 | -1.79 | 0.711 | -110.0 |
 | FDE | -333.2 | 1/2 | -1.79 | 0.711 | -110.0 |
+
+*Only 2 schema(ta) in this analysis: each held-out fold fits eps on the other schema alone, so the held-out ranking is degenerate (a logic wrong on both can win). Read the mean P(yes) table instead.*
 
 ### Mean P(yes) by schema and content
 
@@ -165,6 +177,8 @@ have yes/no mass < 0.5 (thresholds frozen in PREREGISTRATION.md).
 | LP | -530.7 | 1/2 | -1.79 | 0.500 | -127.1 |
 | FDE | -530.7 | 1/2 | -1.79 | 0.500 | -127.1 |
 
+*Only 2 schema(ta) in this analysis: each held-out fold fits eps on the other schema alone, so the held-out ranking is degenerate (a logic wrong on both can win). Read the mean P(yes) table instead.*
+
 ### Logic fit: all schemata (QL excluded)
 
 | Logic | Held-out-schema log-lik | Schemata agreeing | Schema-level log ML | Item agreement | Item log ML (inflated) |
@@ -174,6 +188,8 @@ have yes/no mass < 0.5 (thresholds frozen in PREREGISTRATION.md).
 | K3 | -530.7 | 1/2 | -1.79 | 0.500 | -127.1 |
 | LP | -530.7 | 1/2 | -1.79 | 0.500 | -127.1 |
 | FDE | -530.7 | 1/2 | -1.79 | 0.500 | -127.1 |
+
+*Only 2 schema(ta) in this analysis: each held-out fold fits eps on the other schema alone, so the held-out ranking is degenerate (a logic wrong on both can win). Read the mean P(yes) table instead.*
 
 ### Mean P(yes) by schema and content
 

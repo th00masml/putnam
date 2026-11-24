@@ -62,3 +62,29 @@ The pilot battery output of `generate.py` (no `--schemata`) is byte-identical to
 
 `bash run.sh` (set `PYTHON=` if `python` is not on PATH) scores the seven pilot models sequentially (needs Ollama on 127.0.0.1:11434, one model
 on the GPU at a time) and writes `report.md`. Skips models whose score file already has 534 lines.
+
+## Results (scored 2026-11-24, `report.md`)
+
+Four models: qwen2.5:7b-instruct, gemma3:12b, hermes3:8b, mistral:7b (llama3.1 dropped after the
+explosion-pragmatics run; the larger Qwen models were not run). All four pass the reliability rule; there
+are no fallacy items here, so it is judged on answer mass only (worst: qwen2.5:7b, 102/534 = 19% < 25%).
+
+Mean P(yes), binarised reading against the hypothesis table above:
+
+| Model | ∨-intro | A,¬A ⊢ A | A,¬A,A∨B ⊢ B | double DS | DS | explosion | closest hypothesis |
+|---|---:|---:|---:|---:|---:|---:|---|
+| qwen2.5:7b-instruct | 0.84 | 0.00 | 0.38 | 0.85 | 1.00 | 0.00 | H_b, all six columns match |
+| gemma3:12b | 0.94 | 0.24 | 0.97 | 1.00 | 1.00 | 0.13 | none: H_c except A,¬A ⊢ A |
+| hermes3:8b | 0.41 | 0.07 | 0.35 | 0.54 | 0.83 | 0.02 | H_b-like, but ∨-intro below 0.5 |
+| mistral:7b | 0.40 | 0.03 | 0.10 | 0.38 | 0.60 | 0.13 | H_b-like, chaining fails without contradiction too |
+
+`fit.py` prints H_b for all four, because its decision rule checks A, ¬A ⊢ A first. That label is right for
+qwen2.5:7b (the only model that also passed the fallacy check in the pragmatics run). For gemma3:12b it is
+not: H_b predicts a "no" to A, ¬A, A∨B ⊢ B, and gemma says yes (0.97). hermes3:8b and mistral:7b are weak
+on ∨-introduction and chained DS even without a contradiction, and failed the fallacy check in the
+pragmatics run, so their profiles are exploratory.
+
+Consequence for the paper: the "structural anomaly" / non-transitive-consequence reading (H_c) is not
+supported for qwen2.5:7b. Its explosion "no" is a refusal to infer anything from an inconsistent premise
+set, not a consequence relation. gemma3:12b is the open case; `../2026-11-24__inconsistent-premises/`
+tests whether its "no" to A, ¬A ⊢ A is about the contradicted atom only.

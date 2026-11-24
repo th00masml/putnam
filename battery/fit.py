@@ -124,6 +124,10 @@ def model_section(name, recs):
         for lg, acc, ml, ho, ks, ns, sl in rows:
             out.append(f"| {lg} | {ho:.1f} | {ks}/{ns} | {sl:.2f} | {acc:.3f} | {ml:.1f} |")
         out.append("")
+        if len({r["schema"] for r in sub}) < 3:
+            out.append(f"*Only {len({r['schema'] for r in sub})} schema(ta) in this analysis: each held-out fold fits eps on "
+                       "the other schema alone, so the held-out ranking is degenerate (a logic wrong on both can win). "
+                       "Read the mean P(yes) table instead.*\n")
 
     cell = defaultdict(list)
     for r in recs:

@@ -43,6 +43,8 @@ have yes/no mass < 0.5 (thresholds frozen in PREREGISTRATION.md).
 | LP | -462.5 | 1/2 | -1.79 | 0.500 | -113.2 |
 | FDE | -462.5 | 1/2 | -1.79 | 0.500 | -113.2 |
 
+*Only 2 schema(ta) in this analysis: each held-out fold fits eps on the other schema alone, so the held-out ranking is degenerate (a logic wrong on both can win). Read the mean P(yes) table instead.*
+
 ### Logic fit: all schemata (QL excluded)
 
 | Logic | Held-out-schema log-lik | Schemata agreeing | Schema-level log ML | Item agreement | Item log ML (inflated) |
@@ -97,6 +99,8 @@ have yes/no mass < 0.5 (thresholds frozen in PREREGISTRATION.md).
 | K3 | -226.9 | 1/2 | -1.79 | 0.444 | -114.1 |
 | LP | -416.7 | 1/2 | -1.79 | 0.556 | -111.6 |
 | FDE | -416.7 | 1/2 | -1.79 | 0.556 | -111.6 |
+
+*Only 2 schema(ta) in this analysis: each held-out fold fits eps on the other schema alone, so the held-out ranking is degenerate (a logic wrong on both can win). Read the mean P(yes) table instead.*
 
 ### Logic fit: all schemata (QL excluded)
 
@@ -153,6 +157,8 @@ have yes/no mass < 0.5 (thresholds frozen in PREREGISTRATION.md).
 | LP | -371.0 | 1/2 | -1.79 | 0.613 | -108.5 |
 | FDE | -371.0 | 1/2 | -1.79 | 0.613 | -108.5 |
 
+*Only 2 schema(ta) in this analysis: each held-out fold fits eps on the other schema alone, so the held-out ranking is degenerate (a logic wrong on both can win). Read the mean P(yes) table instead.*
+
 ### Logic fit: all schemata (QL excluded)
 
 | Logic | Held-out-schema log-lik | Schemata agreeing | Schema-level log ML | Item agreement | Item log ML (inflated) |
@@ -208,6 +214,8 @@ have yes/no mass < 0.5 (thresholds frozen in PREREGISTRATION.md).
 | LP | -376.1 | 1/2 | -1.79 | 0.606 | -108.9 |
 | FDE | -376.1 | 1/2 | -1.79 | 0.606 | -108.9 |
 
+*Only 2 schema(ta) in this analysis: each held-out fold fits eps on the other schema alone, so the held-out ranking is degenerate (a logic wrong on both can win). Read the mean P(yes) table instead.*
+
 ### Logic fit: all schemata (QL excluded)
 
 | Logic | Held-out-schema log-lik | Schemata agreeing | Schema-level log ML | Item agreement | Item log ML (inflated) |
@@ -262,6 +270,8 @@ have yes/no mass < 0.5 (thresholds frozen in PREREGISTRATION.md).
 | K3 | -462.5 | 1/2 | -1.79 | 0.500 | -113.2 |
 | LP | -462.5 | 1/2 | -1.79 | 0.500 | -113.2 |
 | FDE | -462.5 | 1/2 | -1.79 | 0.500 | -113.2 |
+
+*Only 2 schema(ta) in this analysis: each held-out fold fits eps on the other schema alone, so the held-out ranking is degenerate (a logic wrong on both can win). Read the mean P(yes) table instead.*
 
 ### Logic fit: all schemata (QL excluded)
 

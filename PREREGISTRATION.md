@@ -29,3 +29,16 @@ Added before any model has scored `runs/2026-11-24__explosion-pragmatics/items.j
 value above changes. The predicted patterns and their readings are the ones in that run's `NOTES.md`.
 A difference between conditions counts only if it crosses the 0.5 cut for the mean P(yes) of the
 cell; smaller shifts are reported but not interpreted.
+
+## 2026-11-24: results, reporting change, inconsistent-premises follow-up
+
+Scored: explosion-pragmatics (5 models) and explosion-chain (4 models); results in each run's `NOTES.md`.
+No frozen value changed. Models that failed the reliability rule in a run are reported as exploratory for
+that run, even where the failure is driven by one conditional schema (denying the antecedent).
+
+Reporting only: `fit.py` now prints a warning under a logic-fit table that rests on fewer than three
+schemata. The diagnosis text in `chain_section` is unchanged, even though it mislabels gemma3:12b (see the
+explosion-chain `NOTES.md`); the paper reports the full profile, not the label.
+
+Added before scoring: `runs/2026-11-24__inconsistent-premises/` (predictions in its `NOTES.md`), on the
+four explosion-chain models.

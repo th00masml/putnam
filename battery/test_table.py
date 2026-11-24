@@ -23,6 +23,10 @@ EXPECTED = {
     "identity_inconsistent":    [Y, Y, Y, Y, Y, Y],
     "explosion_lemma":          [Y, Y, Y, N, N, Y],
     "double_ds":                [Y, Y, Y, N, N, N],
+    # inconsistency follow-up
+    "identity_consistent":      [Y, Y, Y, Y, Y, Y],
+    "bystander_inconsistent":   [Y, Y, Y, Y, Y, Y],
+    "adjunction_inconsistent":  [Y, Y, Y, Y, Y, Y],
 }
 
 
