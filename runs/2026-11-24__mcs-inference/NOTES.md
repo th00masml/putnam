@@ -65,3 +65,37 @@ disjunction_introduction_inconsistent identity_inconsistent bystander_inconsiste
 
 `bash run.sh` (set `PYTHON=` if `python` is not on PATH), or the PowerShell loop with
 `$models = "qwen2.5:7b-instruct","gemma3:12b","hermes3:8b","mistral:7b"`.
+
+## Results (scored 2026-11-24, `report.md`)
+
+All four models pass the answer-mass rule. Mean P(yes), everyday / nonsense / symbolic, and `fit.py`'s match:
+
+| Schema | qwen2.5:7b | gemma3:12b | hermes3:8b | mistral:7b |
+|---|---|---|---|---|
+| A∧C ⊢ C | 0.97 / 0.99 / 1.00 | 1.00 / 0.98 / 1.00 | 0.79 / 0.83 / 0.78 | 0.78 / 0.83 / 0.42 |
+| A∧C, C∧¬A ⊢ C | 0.95 / 1.00 / 0.65 | 0.99 / 0.95 / 1.00 | 0.84 / 0.86 / 0.38 | 0.58 / 0.57 / 0.70 |
+| **A∧C, ¬A ⊢ C** | **0.94 / 0.88 / 1.00** | 0.78 / 0.74 / 0.90 | 0.39 / 0.62 / 0.15 | 0.35 / 0.44 / 0.49 |
+| A, ¬A ⊢ A∨B | 0.01 / 0.02 / 0.53 | 0.23 / 0.30 / 0.13 | 0.07 / 0.26 / 0.16 | 0.02 / 0.04 / 0.33 |
+| A, ¬A ⊢ A | 0.03 / 0.01 / 0.00 | 0.25 / 0.32 / 0.17 | 0.04 / 0.20 / 0.00 | 0.05 / 0.02 / 0.03 |
+| A, ¬A, C ⊢ C | 0.90 / 0.98 / 0.39 | 0.99 / 0.99 / 1.00 | 0.68 / 0.76 / 0.09 | 0.53 / 0.48 / 0.41 |
+| A, ¬A, A∨B ⊢ B | 0.35 / 0.10 / 0.56 | 0.99 / 1.00 / 0.90 | 0.12 / 0.58 / 0.34 | 0.09 / 0.05 / 0.10 |
+| `fit.py` | discard the contradicted atom, exact | none (closest: discard atom, 1 off) | MCS universal, exact | none (MCS universal and global aversion, 1 off each) |
+
+**Preregistered test: the hypothesis is refuted for the confirmatory model.** qwen2.5:7b accepts
+A∧C, ¬A ⊢ C (mean 0.94, well outside the 0.40–0.60 inconclusive band), which MCS universal rejects.
+Its profile matches, exactly and uniquely, the "discard the contradicted atom" row written before the run.
+
+hermes3:8b (exploratory) matches MCS universal exactly, but its deciding item is weak (0.39 mean, 0.62 on
+nonsense content) and it failed the fallacy check in the pragmatics run. gemma3:12b again accepts DS run
+on inconsistent premises (0.96), which no candidate here predicts; its other six items match "discard the
+contradicted atom". mistral:7b matches nothing.
+
+Post hoc, not preregistered: "discard the contradicted atom" can be formalised as universal MCS
+consequence after splitting every conjunctive premise into its conjuncts (`split_universal` in
+`battery/mcs.py`, added after this run). Checked against all of qwen2.5:7b's data from the three
+explosion runs and this one (14 schemata, fallacies excluded), it disagrees on none; plain MCS universal
+disagrees on one (A∧C, ¬A ⊢ C). For the other models split-universal disagrees on 1 (gemma: the DS lemma),
+3 (hermes) and 4 (mistral) schemata. The relation is syntax-sensitive: it treats A∧C differently from
+the pair A, C only before splitting, so it is not a consequence relation on propositions. A new
+preregistered run would have to test it on items where splitting matters and where it doesn't
+(e.g. ¬(A∨C)-style premises that split only after De Morgan).

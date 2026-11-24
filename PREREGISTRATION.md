@@ -51,3 +51,10 @@ subset consequence. Candidates, predictions, the confirmatory model and the deci
 0.40–0.60 inconclusive band for the deciding schema) are in that run's `NOTES.md`; the candidate
 relations are computed by `battery/mcs.py` and printed by `fit.py` (`mcs_section`). No earlier frozen
 value changes.
+
+## 2026-11-24: MCS-inference result
+
+The preregistered hypothesis (qwen2.5:7b follows universal MCS consequence) is refuted: qwen2.5:7b accepts
+A∧C, ¬A ⊢ C (mean 0.94). Its profile matches the pre-specified "discard the contradicted atom" row
+exactly. Its formalisation (`split_universal` in `battery/mcs.py`) was written after this result and is
+exploratory until tested in a new preregistered run. Details in the run's `NOTES.md`.
