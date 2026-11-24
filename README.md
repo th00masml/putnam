@@ -15,6 +15,8 @@ pip install -r requirements.txt
 
 1. `generate.py` writes items (schema × content × framing) with gold verdicts from `logics.py`.
    `python generate.py --per-cell 10 --seed 14 --out items.jsonl`; `--schemata ...` picks a subset.
+   `--related` adds topically related content and `--formal` a framing that defines validity
+   (pragmatic controls for explosion; off by default, so the pilot battery is unchanged).
 2. `score.py` gets P(yes) from first-token logprobs, both answer orders.
    `python score.py --model qwen2.5:7b-instruct --items items.jsonl --out scores__qwen2.5_7b-instruct.jsonl`
    Also writes `scores__*.meta.json` with the model digest, decoding options and item-file hash.
@@ -28,5 +30,12 @@ pip install -r requirements.txt
 - `2026-10-11__pilot-ollama/`: seven local models, full battery (exploratory).
 - `2026-10-11__explosion-symbolic/`: symbolic-only explosion/DS check (scores only).
 - `2026-10-14__explosion-chain/`: prepared, not yet scored. `bash run.sh` (see `NOTES.md`).
+- `2026-11-24__explosion-pragmatics/`: related-content and formal-framing controls for explosion;
+  prepared, not yet scored. `bash run.sh` (see `NOTES.md`).
 
-Pilot score files predate `score.py` writing metadata, so their model digests are not recorded.
+Dependencies are pinned in `requirements.txt`; each new score file gets a `.meta.json` with the
+Ollama model digest, decoding options and item-file hash. Pilot score files predate `score.py` writing metadata, so their model digests are not recorded.
+
+## License
+
+Code: MIT (`LICENSE`). The proposals and reports are not covered by it.
