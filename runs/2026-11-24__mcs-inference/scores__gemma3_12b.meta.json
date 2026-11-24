@@ -1,0 +1,16 @@
+{
+  "model": "gemma3:12b",
+  "digest": "b92b218582c521ba287f38f1d6057dcd3c6cbff036f13cac97b5d861f5e58ec3",
+  "options": {
+    "num_predict": 1,
+    "temperature": 0
+  },
+  "top_logprobs": 20,
+  "think": null,
+  "num_thread": null,
+  "items": "items.jsonl",
+  "items_sha256": "1262339b5603debf78a33f1a6f5ac9aa8b8c3ea1af8c3563073065e2fdf3c479",
+  "n_items": 624,
+  "started": "2026-11-24T21:09:05+0100",
+  "prompt_template": "item['prompt'], and again with 'Answer yes or no.' -> 'Answer no or yes.'"
+}
