@@ -69,3 +69,36 @@ prediction or analysis value changed. The choice was made on answer-token mass o
 
 `bash run.sh` (set `PYTHON=` if `python` is not on PATH). Same model list and skip logic as the
 explosion-chain run. `fit.py` prints a by-framing table when the `formal` framing is present.
+
+## Results (scored 2026-11-24, `report.md`)
+
+Five models: qwen2.5:7b-instruct, gemma3:12b, hermes3:8b, llama3.1:latest, mistral:7b. The other pilot
+models (qwen3.5:9b, qwen2.5:14b, qwen3-coder:30b, qwen3.8:27b) were not run.
+
+Reliability (frozen rule): only qwen2.5:7b is "ok". gemma3:12b, hermes3:8b and mistral:7b exceed the
+fallacy yes-rate limit (0.41, 0.28, 0.45), almost entirely through denying the antecedent (gemma 0.75–0.80),
+most likely a biconditional reading of "if". llama3.1 also fails on answer mass (52% of items < 0.5) and
+answer order (mean gap 0.13) and is dropped. The flagged models are exploratory only; the threshold was
+not changed after seeing the data.
+
+Mean P(yes) on explosion:
+
+| Model | everyday | related | formal framing | reliability |
+|---|---:|---:|---:|---|
+| qwen2.5:7b-instruct | 0.00 | 0.00 | 0.00 | ok |
+| gemma3:12b | 0.03 | 0.00 | 0.02 | exploratory |
+| hermes3:8b | 0.00 | 0.01 | 0.03 | exploratory |
+| mistral:7b | 0.07 | 0.12 | 0.11 | exploratory |
+
+Against the predictions above: no model moves to "yes" with related content or under the formal framing,
+and the formal framing does not raise the fallacy yes-rate for qwen2.5:7b (affirming the consequent 0.09,
+denying the antecedent 0.31). This is the "contradiction aversion / non-transitive consequence" row:
+neither relevance nor a conversational reading of "follow" explains the explosion "no". Which of the two
+remaining accounts holds is settled by `../2026-10-14__explosion-chain/`.
+
+`explosion_lemma` (A, ¬A, A∨B ⊢ B) splits the models: qwen 0.21–0.26, hermes 0.09–0.12, mistral 0.06–0.11
+(DS stops working once a contradiction is in the premises), gemma 0.93/0.65 (DS still works).
+
+The logic-fit tables in `report.md` are not interpretable for this run: only explosion and DS are
+conditional-free, so the held-out ranking is degenerate (QL "wins" while disagreeing on both schemata).
+`fit.py` now prints a warning under such tables.

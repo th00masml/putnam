@@ -1,12 +1,19 @@
-# Disjunctive Syllogism Without Explosion: Which Logic Do Language Models Follow?
+# Rejecting Explosion Is Not Paraconsistency: Language Models and Inference from Inconsistent Premises
 
-*Focused project proposal — draft, 2026-10-11; rescoped 2026-11-24.*
+*Focused project proposal — draft, 2026-10-11; rescoped 2026-11-24; thesis revised after the explosion-chain run, 2026-11-24.*
 *Narrowed from WP1 + WP2 of `proposal.md`.*
 
 **Scope of the first paper (preprint).** Only A1 (§3.1–3.3) and the explosion follow-ups: the
 explosion-chain run (`runs/2026-10-14__explosion-chain/`) and the pragmatic controls
-(`runs/2026-11-24__explosion-pragmatics/`). Its claim is the DS-yes/explosion-no pattern and which step
-of Lewis's derivation the models refuse. The preprint does not claim any result on revision. In-context
+(`runs/2026-11-24__explosion-pragmatics/`), plus the inconsistent-premises follow-up
+(`runs/2026-11-24__inconsistent-premises/`). Its claim, as the data now stand: models accept DS and reject
+explosion, but the rejection is not a paraconsistent (or any) consequence relation. It survives on-topic
+conclusions and an explicit definition of validity, and it comes with a "no" to A, ¬A ⊢ A, which every
+candidate logic validates; that is, the models decline to infer anything from an inconsistent premise set.
+This is confirmatory for qwen2.5:7b only (the one model passing both reliability checks) and exploratory
+for gemma3:12b, hermes3:8b and mistral:7b. gemma3:12b does not fit this account (it accepts DS run on
+inconsistent premises) and is reported as an open case. The earlier "non-transitive consequence" reading
+is not supported. The preprint does not claim any result on revision. In-context
 revision (A2) and fine-tuning revision and entrenchment (A3, A4) are a separate, later paper; they stay
 below as the plan for it and must not appear in the preprint's abstract.
 
@@ -14,13 +21,13 @@ below as the plan for it and must not appear in the preprint's abstract.
 
 Putnam argued that logic is, in principle, empirical. Experience can force us to give up a law of logic, as he claimed quantum mechanics forces us to give up distribution ("Is Logic Empirical?", 1968). He later abandoned the quantum-logic interpretation (Putnam 2005), so we test the 1968 thesis as a thesis, not as Putnam's settled view. A decade later he drew a limit: at least one principle cannot be revised, the *minimal principle of contradiction*, "not every statement is both true and false" (1978).
 
-Large language models get their logical behaviour from data, so both claims can be tested on real reasoners. The pilot (seven local models, `runs/2026-10-11__pilot-ollama/report.md`) already gives a first answer to question 1 that fits none of the six candidate logics: every model accepts disjunctive syllogism and rejects explosion. The first paper is about that pattern. The project as a whole asks three questions:
+Large language models get their logical behaviour from data, so both claims can be tested on real reasoners. The pilot (seven local models, `runs/2026-10-11__pilot-ollama/report.md`) gave a first answer to question 1 that fits none of the six candidate logics: every model accepts disjunctive syllogism and rejects explosion. Follow-up runs point to why: the models refuse to reason from contradictory premises at all, so explosion items measure contradiction aversion, not a logic. The first paper is about that pattern and what it means for logic benchmarks that score explosion. The project as a whole asks three questions:
 
 1. **Which logic** best describes a given LLM's inferential behaviour?
 2. **Can it be revised**, by in-context evidence or by fine-tuning, and is the revision local or global?
 3. **Is there an unrevisable core?** That is, does the cost of revising each principle rise steeply, with the minimal principle of contradiction at the top?
 
-Deliverables, in order: (1) a preprint on the DS-yes/explosion-no pattern with the battery and code; (2) a later empirical paper on revision (A2–A4); (3) a philosophical paper on what LLM results do and do not show about Putnam's theses.
+Deliverables, in order: (1) a preprint showing that rejecting explosion is contradiction aversion rather than paraconsistency, with the battery and code; (2) a later empirical paper on revision (A2–A4); (3) a philosophical paper on what LLM results do and do not show about Putnam's theses.
 
 ## 1. Background
 
@@ -136,7 +143,7 @@ The empirical results feed one conceptual paper built around a key disanalogy. P
 
 **First paper (preprint):** A1 only, on the seven local models plus the extended model set below, with the explosion-chain and pragmatic-control runs. No revision results.
 
-**Model set for the preprint.** The pilot is four Qwen models out of seven, all 8–30B, all local. Before the preprint, add at least two families not yet covered (e.g. Gemma, Mistral or OLMo at similar sizes) and one closed API model scored with the k-sample protocol of §3.2, so that the claim is about more than one family.
+**Model set for the preprint.** The pilot is four Qwen models out of seven, all 8–30B, all local. The explosion follow-ups added gemma3:12b and mistral:7b (2026-11-24); llama3.1 was dropped for unreliable answers (52% of items with yes/no mass < 0.5). Still missing before the preprint: one closed API model scored with the k-sample protocol of §3.2, and ideally one larger model, because only qwen2.5:7b passed every reliability check.
 
 **Whole project, in scope**
 - Propositional schemata only.
@@ -153,7 +160,7 @@ The empirical results feed one conceptual paper built around a key disanalogy. P
 | Months | Work | Milestone |
 |--------|------|-----------|
 | 1–2 | Item generators; model-checkers for six logics; pilot on seven local models | Battery v0.1, pilot report (done) |
-| 3–4 | Explosion-chain and pragmatic-control runs; extended model set (A1) | **Preprint** |
+| 3–4 | Explosion-chain and pragmatic-control runs (done 2026-11-24); inconsistent-premises follow-up; API model (A1) | **Preprint** |
 | 4–6 | In-context revision and adoption-problem condition (A2) | Locality results |
 | 5–8 | Synthetic corpora; fine-tuning revision (A3) | Revision results |
 | 7–10 | Revision-cost sweeps (A4) | Cost ordering, collapse analysis |
@@ -161,7 +168,7 @@ The empirical results feed one conceptual paper built around a key disanalogy. P
 
 ## 7. Outputs
 
-1. **Preprint** on the DS-yes/explosion-no pattern (A1 only), arXiv cs.CL.
+1. **Preprint**: rejecting explosion is contradiction aversion, not paraconsistency (A1 only), arXiv cs.CL.
 2. **Empirical paper on revision** (A2–A4). Target venue: an ACL-family or NeurIPS-type conference.
 3. **Philosophical paper.** Target: a philosophy of logic or philosophy of mind journal (e.g. *Synthese*, *Philosophical Studies*, *Minds and Machines*).
 4. **Open release.** The schema battery, generators, model-checkers and fitting code.

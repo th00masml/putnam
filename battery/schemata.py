@@ -42,4 +42,12 @@ CHAIN_SCHEMATA = {
     "double_ds": ([disj(A, B), neg(A), disj(neg(B), C)], C),         # two chained DS steps, no contradiction
 }
 
-ALL_SCHEMATA = {**SCHEMATA, **CHAIN_SCHEMATA}
+# Follow-up to the explosion-chain run: is the "no" to A, ¬A ⊢ A about any inference from an inconsistent set,
+# or only about conclusions on the contradicted atom? Selected with generate.py --schemata.
+INCONSISTENCY_SCHEMATA = {
+    "identity_consistent": ([A, C], C),                              # restating a premise, no contradiction
+    "bystander_inconsistent": ([A, neg(A), C], C),                   # restating an unrelated premise next to a contradiction
+    "adjunction_inconsistent": ([A, neg(A)], conj(A, neg(A))),       # restating the contradiction itself
+}
+
+ALL_SCHEMATA = {**SCHEMATA, **CHAIN_SCHEMATA, **INCONSISTENCY_SCHEMATA}
