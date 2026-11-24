@@ -1,0 +1,16 @@
+{
+  "model": "qwen2.5:7b-instruct",
+  "digest": "845dbda0ea48ed749caafd9e6037047aa19acfcfd82e704d7ca97d631a0b697e",
+  "options": {
+    "num_predict": 1,
+    "temperature": 0
+  },
+  "top_logprobs": 20,
+  "think": null,
+  "num_thread": null,
+  "items": "items.jsonl",
+  "items_sha256": "ce766b01662b18cedc2d2133d79b3215cbd1e48af8f771b73c46593906e45873",
+  "n_items": 584,
+  "started": "2026-11-24T21:31:29+0100",
+  "prompt_template": "item['prompt'], and again with 'Answer yes or no.' -> 'Answer no or yes.'"
+}
