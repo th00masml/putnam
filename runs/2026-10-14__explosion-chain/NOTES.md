@@ -88,3 +88,10 @@ Consequence for the paper: the "structural anomaly" / non-transitive-consequence
 supported for qwen2.5:7b. Its explosion "no" is a refusal to infer anything from an inconsistent premise
 set, not a consequence relation. gemma3:12b is the open case; `../2026-11-24__inconsistent-premises/`
 tests whether its "no" to A, ¬A ⊢ A is about the contradicted atom only.
+
+**Correction (2026-11-24, after review of the preprint draft).** The H_c label ("not closed under cut")
+needs care. Lewis's argument uses the form of Cut that combines premise sets. With a shared premise set
+Γ = {A, ¬A}, Cut would need Γ ⊢ A∨B accepted, and both qwen2.5:7b (0.19) and gemma3:12b (0.22) reject it
+(`../2026-11-24__mcs-inference/`). The data show failures of reflexivity (A, ¬A ⊬ A) and monotonicity
+(DS accepted, DS with A added rejected), not of shared-premise Cut. "gemma3:12b = H_c" above should be
+read as "accepts every step of Lewis's argument as posed and rejects its conclusion", nothing more.

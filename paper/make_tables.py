@@ -170,7 +170,7 @@ def table_profile():
         r"LP, universal maximal-consistent-subset consequence (MCS-U) and MCS-U after splitting conjunctive premises (Split, "
         r"formalised post hoc). Right: mean $P(\text{yes})$; for the confirmatory model qwen2.5:7b, with a 95\% instance-bootstrap "
         r"interval. Upper block: consistent premises; lower block: inconsistent premises. Every form is classically valid; forms marked $\times$ under LP are invalid in LP and FDE, "
-        r"and all others are valid in all six candidate logics. Bottom: number of schemata whose binarised mean disagrees "
+        r"and all others are valid in all six candidate logics (IL up to three worlds, QL in MO2). Bottom: number of schemata whose binarised mean disagrees "
         r"with each candidate.}",
         r"\label{tab:profile}",
         r"\begin{tabular}{lcccc" + "r" * len(MODELS) + r"}\toprule",

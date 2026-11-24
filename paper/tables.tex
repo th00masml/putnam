@@ -26,7 +26,7 @@ llama3.1:latest & 0.18 & 0.23 & 0.39 & 0.46 & 52\% & unstable \\
 \bottomrule\end{tabular}\end{table}
 
 \begin{table*}[t]\centering\small
-\caption{Profile over the follow-up runs (pooled across runs where a schema recurs). Left: verdicts of classical logic, LP, universal maximal-consistent-subset consequence (MCS-U) and MCS-U after splitting conjunctive premises (Split, formalised post hoc). Right: mean $P(\text{yes})$; for the confirmatory model qwen2.5:7b, with a 95\% instance-bootstrap interval. Upper block: consistent premises; lower block: inconsistent premises. Every form is classically valid; forms marked $\times$ under LP are invalid in LP and FDE, and all others are valid in all six candidate logics. Bottom: number of schemata whose binarised mean disagrees with each candidate.}
+\caption{Profile over the follow-up runs (pooled across runs where a schema recurs). Left: verdicts of classical logic, LP, universal maximal-consistent-subset consequence (MCS-U) and MCS-U after splitting conjunctive premises (Split, formalised post hoc). Right: mean $P(\text{yes})$; for the confirmatory model qwen2.5:7b, with a 95\% instance-bootstrap interval. Upper block: consistent premises; lower block: inconsistent premises. Every form is classically valid; forms marked $\times$ under LP are invalid in LP and FDE, and all others are valid in all six candidate logics (IL up to three worlds, QL in MO2). Bottom: number of schemata whose binarised mean disagrees with each candidate.}
 \label{tab:profile}
 \begin{tabular}{lccccrrrr}\toprule
 Form & CL & LP & MCS-U & Split & qwen2.5:7b & gemma3 & hermes3 & mistral \\\midrule

@@ -1,4 +1,4 @@
-# Rejecting Explosion Is Not Paraconsistency: Language Models and Inference from Inconsistent Premises
+# Disjunctive Syllogism without Explosion: How Small Language Models Handle Inconsistent Premises
 
 *Focused project proposal — draft, 2026-10-11; rescoped 2026-11-24; thesis revised after the explosion-chain run, 2026-11-24.*
 *Narrowed from WP1 + WP2 of `proposal.md`.*

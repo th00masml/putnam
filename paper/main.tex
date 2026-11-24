@@ -9,7 +9,7 @@
 \usepackage{url}
 \usepackage[hidelinks]{hyperref}
 
-\title{Rejecting Explosion Is Not Paraconsistency:\\How Small Language Models Reason from Inconsistent Premises}
+\title{Disjunctive Syllogism without Explosion:\\How Small Language Models Handle Inconsistent Premises}
 % TODO(author): replace with your name and affiliation before submission.
 \author{Author Name\\Affiliation\\\texttt{email@example.org}}
 \date{Preprint, November 2026}
@@ -20,28 +20,31 @@
 \begin{abstract}
 Logic benchmarks for language models score answers against classical logic, so a model that accepts
 disjunctive syllogism (DS) but rejects explosion ($A, \neg A \vdash B$) counts as making a classical error,
-or as hinting at a paraconsistent logic. In a pilot on seven local open-weight models (7--30B parameters)
-every model showed exactly this pattern, which fits none of six candidate logics (classical,
+or as hinting at a paraconsistent logic such as LP. In a pilot on seven local open-weight models
+(7--30B parameters) every model showed this pattern, which fits none of six candidate logics (classical,
 intuitionistic, K3, LP, FDE, orthomodular quantum logic). We ran four follow-up experiments, each with
 predictions committed to version control before scoring. The rejection of explosion survives conclusions
-that are on topic and an explicit definition of validity. It is not a consequence relation of any of the
-six logics, and not a refusal to reason from inconsistent premises at all: the models still conclude
-$C$ from $A, \neg A, C$. What they refuse is any conclusion that rests on the contradicted sentence,
-including $A$ itself from $A, \neg A$, which every candidate logic validates. For the one model that
-passed every reliability check (qwen2.5:7b-instruct), a pre-specified hypothesis based on maximal
-consistent subsets (Rescher and Manor) was refuted, and the model's profile instead matched a
-pre-specified rival exactly: drop what the premises say about the contradicted atom and reason
-classically with the rest. A formalisation of that rival, fixed after the data, agrees with all 14
-schemata we measured for this model. We argue that explosion items in logic benchmarks measure a
-strategy for handling inconsistency, not adherence to a logic, and we report the models and checks that
-did not support these conclusions.
+that are on topic and an explicit definition of validity. For the one model that passed every reliability
+check (qwen2.5:7b-instruct), it is not a refusal to reason from inconsistent premises at all: the model
+still concludes $C$ from $A, \neg A, C$ in natural language, but refuses every tested conclusion that
+rests on the contradicted sentence, including $A$ itself from $A, \neg A$, which every candidate logic
+validates. Its departures from classical logic are failures of reflexivity and monotonicity, not of Cut with a
+shared premise set.
+A pre-specified hypothesis based on maximal consistent subsets (Rescher and Manor) was refuted for this
+model, and its profile instead matched a pre-specified rival exactly: drop what the premises say about the
+contradicted atom and reason classically with the rest. A formalisation of that rival, fixed after the
+data, agrees with all 14 schemata we measured for this model, including those it was built from. Three
+other models, in three further families, are exploratory and do not share one profile. We argue that
+explosion items in logic benchmarks measure a strategy for handling inconsistency, not adherence to a
+logic.
 \end{abstract}
 
 \section{Introduction}
 
-Putnam held that the choice of logic is, in principle, open to revision on empirical grounds
-\citep{putnam1968}, and later that at least one principle, ``not every statement is both true and
-false'', survives every rational revision \citep{putnam1978}. Language models invite a version of the
+Putnam argued that quantum mechanics gives empirical grounds to revise classical logic in favour of
+quantum logic \citep{putnam1968}, a proposal he later gave up \citep{putnam2005}. He also argued that at
+least one principle survives every rational revision: the minimal principle of contradiction, ``not
+every statement is both true and false'' \citep{putnam1978}. Language models invite a version of the
 first question that can actually be measured: a model's inferential behaviour is learned from text, so
 one can ask which logic, if any, describes it.
 
@@ -51,17 +54,18 @@ produces. All seven pilot models accepted DS ($A \lor B, \neg A \vdash B$) and r
 ($A, \neg A \vdash B$). Classical, intuitionistic and K3 logic validate both; LP and FDE validate
 neither; orthomodular quantum logic validates explosion and rejects DS. The pattern is also puzzling for
 a second reason. C.~I.~Lewis's derivation of explosion \citep{lewis1932} uses only $\lor$-introduction
-($A \vdash A \lor B$), DS, and chaining. A reasoner that accepts both steps but rejects the conclusion
-either has a non-transitive consequence relation or is not applying a consequence relation at all.
+($A \vdash A \lor B$), DS, and the form of Cut that combines premise sets. That form follows from Cut
+with a shared premise set plus monotonicity, so a reasoner that accepts both steps but rejects the
+conclusion gives up one of these structural rules, or is not applying a consequence relation at all.
 
 This paper reports four follow-up experiments that decide between these readings. Our contributions:
 \begin{itemize}
-\item The rejection of explosion is robust across five model families and does not go away when the
+\item The rejection of explosion is robust across four model families and does not go away when the
 conclusion is on topic or when the prompt states the classical definition of validity
 (Section~\ref{sec:pragmatics}).
-\item It is not evidence for paraconsistency or for non-transitive consequence: models also reject
-$A, \neg A \vdash A$, valid in every candidate logic, while still accepting $A, \neg A, C \vdash C$
-(Sections~\ref{sec:chain}--\ref{sec:inconsistent}).
+\item It is not one of the candidate logics. For the confirmatory model the structural failures are of
+reflexivity and monotonicity, not shared-premise Cut: it rejects $A, \neg A \vdash A$, valid in every candidate logic,
+while accepting $A, \neg A, C \vdash C$ (Sections~\ref{sec:chain}--\ref{sec:inconsistent}).
 \item For the confirmatory model, a pre-specified hypothesis based on maximal consistent subsets was
 refuted, and a pre-specified rival, ``discard the contradicted atom'', matched exactly
 (Section~\ref{sec:mcs}).
@@ -84,7 +88,10 @@ The candidate logics are classical logic (CL), intuitionistic logic (IL), strong
 \citep{kleene1952}, Priest's LP \citep{priest1979}, first-degree entailment FDE \citep{dunn1976}, and
 orthomodular quantum logic QL \citep{birkhoff1936}, the logic behind Putnam's 1968 proposal. For
 inconsistent premise sets we also consider consequence from maximal consistent subsets
-\citep{rescher1970}.
+\citep{rescher1970}; its free, universal and existential variants are compared by
+\citet{benferhat1997}. Chunk and permeate \citep{brown2004} is a related paraconsistent strategy that
+breaks information into chunks and lets only limited information pass between them. For the structural
+properties at issue (reflexivity, monotonicity, Cut) we follow the vocabulary of \citet{kraus1990}.
 
 \section{Method}
 
@@ -95,8 +102,10 @@ Each schema (premises and conclusion over atoms $A, B, C$) is instantiated with 
 ``Suppose the following are all true\ldots{} Must it then be true that\ldots?'', and ``Is this argument
 logically valid?''. Every prompt ends with ``Answer yes or no.''. Gold verdicts are computed, not
 hand-labelled: exhaustive truth tables for CL, K3, LP and FDE, a search over Kripke models with up to
-three worlds for IL, and valuations into the smallest non-distributive orthomodular lattice for QL. A
-test file checks the computed verdicts against hand-derived ones.
+three worlds for IL, and valuations into the smallest non-distributive orthomodular lattice (MO2) for
+QL. IL validities are therefore validity up to three worlds and QL validities validity in MO2;
+invalidities are exact. QL verdicts are left undefined for forms with a conditional. A test file checks
+the computed verdicts against hand-derived ones.
 
 \paragraph{Scoring.}
 For each item we take the first-token log-probabilities from the model (temperature 0, top 20
@@ -158,10 +167,13 @@ predictions were written on 14 October and committed before any of these items w
 Table~\ref{tab:profile} shows the result in the rows for DS, chained DS, $\lor$-introduction, explosion,
 $A, \neg A \vdash A$ and the DS lemma. qwen2.5:7b accepts $\lor$-introduction (0.84), DS (1.00) and
 chained DS (0.85) and rejects the DS lemma with a contradiction present (0.32). It also rejects
-$A, \neg A \vdash A$ (0.01), which every candidate logic validates. This rules out a non-transitive
-consequence relation for this model: it does not accept every step and refuse the conclusion; it refuses
-the step that runs through the contradiction. gemma3:12b is different: it accepts the DS lemma (0.91)
-but not explosion, which is the non-transitive profile, apart from its rejection of $A, \neg A \vdash A$.
+$A, \neg A \vdash A$ (0.01), which every candidate logic validates. The structural failure is therefore
+located in reflexivity and monotonicity: the model accepts DS but not DS with $A$ added. The combined-premise
+Cut of Lewis's argument fails, but no instance of Cut with a shared premise set is violated, because with
+$\Gamma = \{A, \neg A\}$ the model also rejects $\Gamma \vdash A \lor B$ (0.19). gemma3:12b differs: it
+accepts the DS lemma (0.91) but not explosion. It too rejects $\Gamma \vdash A \lor B$ (0.22), so its
+answers do not violate shared-premise Cut either; they fail reflexivity, and we have no candidate that
+fits them.
 
 \subsection{Global aversion or a local filter?}\label{sec:inconsistent}
 A ``no'' to $A, \neg A \vdash A$ has two readings. Either the model draws nothing from an inconsistent
@@ -195,27 +207,28 @@ models, hermes3:8b matched MCS exactly in this run (deciding item 0.39), gemma3:
 \paragraph{A formalisation, fixed after the data.}
 ``Discard the contradicted atom'' coincides, on our items, with MCS consequence computed after splitting
 each conjunctive premise into its conjuncts. Across all 14 schemata in Table~\ref{tab:profile} it
-disagrees with qwen2.5:7b on none, against one for plain MCS and five for CL. The relation is
-syntax-sensitive (it treats $A \land C$ differently from the premise pair $A, C$ only before splitting),
-so it is not a consequence relation on propositions. We report it as a description to be tested, not as
-a finding.
+disagrees with qwen2.5:7b on none, against one for plain MCS and five for CL. Seven of these schemata were among the data the formalisation was built
+from, so the agreement is fit, not prediction. Like plain MCS consequence, it is defined on premise bases
+rather than propositions (replacing a premise by a classical equivalent can change verdicts), and it
+fails reflexivity and monotonicity, so it is not a consequence relation in Tarski's sense. We report it as
+a description to be tested, not as a finding.
 
 \section{Discussion}
 
 \paragraph{What explosion items measure.}
-A benchmark that counts the rejection of explosion as a classical error, or as a sign of a paraconsistent
-logic, misreads it. The models we studied do not reject explosion because they lack $\lor$-introduction
-or DS, and not because they hold a logic in which contradictions are harmless. They reject it because
-they will not draw conclusions that depend on a sentence the premises both assert and deny, and an
-explosion item has no other support for its conclusion. The same strategy makes them reject inferences
-that every candidate logic accepts, such as $A, \neg A \vdash A$.
+A benchmark that counts the rejection of explosion as a classical error, or as a sign of a logic like LP
+or FDE, misreads it, at least for the model we can draw firm conclusions about. qwen2.5:7b does not reject
+explosion because it lacks $\lor$-introduction or DS. Its answers are consistent with a policy of not
+drawing conclusions that depend on a sentence the premises both assert and deny; an explosion item offers
+no other support for its conclusion. The same policy makes it reject inferences that every candidate logic
+accepts, such as $A, \neg A \vdash A$.
 
 \paragraph{Relation to Putnam.}
-qwen2.5:7b never concludes $A \land \neg A$ from $A$ and $\neg A$ (mean 0.00). One can read this as a
-behavioural counterpart of Putnam's minimal principle of contradiction \citep{putnam1978}: the model
-does not treat any statement as both true and false. The analogy is limited. Putnam's principle is
-normative and about rational revision; ours is a regularity in a 7B model's answers, and a regularity
-says nothing about whether giving it up could be rational.
+Putnam's minimal principle of contradiction, that \emph{not every} statement is both true and false
+\citep{putnam1978}, rules out only trivialism. The nearest behavioural counterpart in our data is the
+refusal of explosion, which keeps an inconsistent premise set from licensing every conclusion. The analogy
+is limited: Putnam's principle concerns what it could be rational to give up, and a regularity in a 7B
+model's answers says nothing about that.
 
 \paragraph{Heterogeneity.}
 The models do not share one strategy. gemma3:12b runs DS through a contradiction (0.91) but still
@@ -234,6 +247,9 @@ has not been tested on items where it and its rivals diverge, such as premises t
 Morgan's laws.
 \item First-token probabilities measure the model's immediate answer, not what it would conclude after
 reasoning. Items are English, template-generated and propositional.
+\item The relevance and formal-definition controls were run on explosion only. A ``no'' to
+$A, \neg A \vdash A$ may have a pragmatic reading (``is $A$ the case?'') that we did not control for.
+\item Four model families were tested (hermes3 is a fine-tune of Llama 3.1).
 \item The reliability rule's fallacy check is driven mostly by denying the antecedent, a conditional
 schema whose natural-language reading is contested. We kept the rule as frozen.
 \item The record of predictions is a git history; commit timestamps are set by the author's machine.
