@@ -1,19 +1,26 @@
-# Can a Language Model Revise Its Logic? Testing Putnam's Revisability Thesis and Minimal A Priori on LLMs
+# Disjunctive Syllogism Without Explosion: Which Logic Do Language Models Follow?
 
-*Focused project proposal (grant / paper scale, 12 months) — draft, 2026-10-11*
+*Focused project proposal — draft, 2026-10-11; rescoped 2026-11-24.*
 *Narrowed from WP1 + WP2 of `proposal.md`.*
+
+**Scope of the first paper (preprint).** Only A1 (§3.1–3.3) and the explosion follow-ups: the
+explosion-chain run (`runs/2026-10-14__explosion-chain/`) and the pragmatic controls
+(`runs/2026-11-24__explosion-pragmatics/`). Its claim is the DS-yes/explosion-no pattern and which step
+of Lewis's derivation the models refuse. The preprint does not claim any result on revision. In-context
+revision (A2) and fine-tuning revision and entrenchment (A3, A4) are a separate, later paper; they stay
+below as the plan for it and must not appear in the preprint's abstract.
 
 ## Summary
 
 Putnam argued that logic is, in principle, empirical. Experience can force us to give up a law of logic, as he claimed quantum mechanics forces us to give up distribution ("Is Logic Empirical?", 1968). He later abandoned the quantum-logic interpretation (Putnam 2005), so we test the 1968 thesis as a thesis, not as Putnam's settled view. A decade later he drew a limit: at least one principle cannot be revised, the *minimal principle of contradiction*, "not every statement is both true and false" (1978).
 
-Large language models get their logical behaviour from data, so both claims can now be tested on real reasoners. This project asks three questions:
+Large language models get their logical behaviour from data, so both claims can be tested on real reasoners. The pilot (seven local models, `runs/2026-10-11__pilot-ollama/report.md`) already gives a first answer to question 1 that fits none of the six candidate logics: every model accepts disjunctive syllogism and rejects explosion. The first paper is about that pattern. The project as a whole asks three questions:
 
 1. **Which logic** best describes a given LLM's inferential behaviour?
 2. **Can it be revised**, by in-context evidence or by fine-tuning, and is the revision local or global?
 3. **Is there an unrevisable core?** That is, does the cost of revising each principle rise steeply, with the minimal principle of contradiction at the top?
 
-Deliverables: an open benchmark of logic *profiles* (as opposed to accuracy scores), an empirical paper, and a philosophical paper on what LLM results do and do not show about Putnam's theses.
+Deliverables, in order: (1) a preprint on the DS-yes/explosion-no pattern with the battery and code; (2) a later empirical paper on revision (A2–A4); (3) a philosophical paper on what LLM results do and do not show about Putnam's theses.
 
 ## 1. Background
 
@@ -26,9 +33,11 @@ Deliverables: an open benchmark of logic *profiles* (as opposed to accuracy scor
 
 The inferential regularities of an LLM are induced from a corpus. Nothing is hard-coded. So revisability becomes something we can control: we can change the evidence and measure the change in the logic. Entrenchment becomes measurable too: we can compare how hard different principles are to dislodge.
 
-### 1.3 Gap
+### 1.3 Related work and gap
 
-Existing LLM reasoning benchmarks (e.g. Clark et al. 2020; Saparov & He 2023) score models against *classical* logic and report accuracy. They do not ask which non-classical logic fits better. They do not test whether a model's logic shifts under targeted evidence. And they do not compare how robust different principles are. On the philosophy side, discussion of the adoption problem (Kripke 2024; Padró 2015) and of anti-exceptionalism about logic (Williamson 2017) has had no empirical population of reasoners to study.
+LLM logical-reasoning benchmarks grade answers against classical logic. RuleTaker (Clark et al. 2020) and PrOntoQA (Saparov & He 2023) test chained rule application over synthetic theories; FOLIO (Han et al. 2024) pairs natural-language premises with first-order annotations checked by a prover; LogicBench (Parmar et al. 2024) isolates single inference rules across propositional, first-order and non-monotonic reasoning, and Multi-LogiEval (Patel et al. 2024) chains them to greater depth. Lampinen et al. (2024) show that LLM validity judgements depend on whether the conclusion is believable, as human ones do, which is the belief-bias pattern H1 predicts. All of these report accuracy against one target logic.
+
+The gap is in what they measure. They do not ask which non-classical logic fits better. They do not test whether a model's logic shifts under targeted evidence. And they do not compare how robust different principles are. On the philosophy side, discussion of the adoption problem (Kripke 2024; Padró 2015) and of anti-exceptionalism about logic (Williamson 2017) has had no empirical population of reasoners to study.
 
 ## 2. Aims and hypotheses
 
@@ -125,7 +134,11 @@ The empirical results feed one conceptual paper built around a key disanalogy. P
 
 ## 5. Scope
 
-**In scope**
+**First paper (preprint):** A1 only, on the seven local models plus the extended model set below, with the explosion-chain and pragmatic-control runs. No revision results.
+
+**Model set for the preprint.** The pilot is four Qwen models out of seven, all 8–30B, all local. Before the preprint, add at least two families not yet covered (e.g. Gemma, Mistral or OLMo at similar sizes) and one closed API model scored with the k-sample protocol of §3.2, so that the claim is about more than one family.
+
+**Whole project, in scope**
 - Propositional schemata only.
 - Six candidate logics.
 - About 3 API models and 2 open model families.
@@ -139,8 +152,8 @@ The empirical results feed one conceptual paper built around a key disanalogy. P
 
 | Months | Work | Milestone |
 |--------|------|-----------|
-| 1–2 | Item generators; model-checkers for six logics; pilot on one open model | Battery v0.1, pilot report |
-| 3–4 | Baseline profiling, all models (A1) | Logic-fit results |
+| 1–2 | Item generators; model-checkers for six logics; pilot on seven local models | Battery v0.1, pilot report (done) |
+| 3–4 | Explosion-chain and pragmatic-control runs; extended model set (A1) | **Preprint** |
 | 4–6 | In-context revision and adoption-problem condition (A2) | Locality results |
 | 5–8 | Synthetic corpora; fine-tuning revision (A3) | Revision results |
 | 7–10 | Revision-cost sweeps (A4) | Cost ordering, collapse analysis |
@@ -148,9 +161,10 @@ The empirical results feed one conceptual paper built around a key disanalogy. P
 
 ## 7. Outputs
 
-1. **Empirical paper.** Target venue: an ACL-family or NeurIPS-type conference.
-2. **Philosophical paper.** Target: a philosophy of logic or philosophy of mind journal (e.g. *Synthese*, *Philosophical Studies*, *Minds and Machines*).
-3. **Open release.** The schema battery, generators, model-checkers and fitting code.
+1. **Preprint** on the DS-yes/explosion-no pattern (A1 only), arXiv cs.CL.
+2. **Empirical paper on revision** (A2–A4). Target venue: an ACL-family or NeurIPS-type conference.
+3. **Philosophical paper.** Target: a philosophy of logic or philosophy of mind journal (e.g. *Synthese*, *Philosophical Studies*, *Minds and Machines*).
+4. **Open release.** The schema battery, generators, model-checkers and fitting code.
 
 ## 8. Resources (estimate)
 
@@ -171,10 +185,14 @@ The empirical results feed one conceptual paper built around a key disanalogy. P
 ## 10. Key references
 
 - Clark, P., Tafjord, O. & Richardson, K. (2020). Transformers as soft reasoners over language. *IJCAI*.
+- Han, S. et al. (2024). FOLIO: Natural language reasoning with first-order logic. *EMNLP 2024*. aclanthology.org/2024.emnlp-main.1229
+- Lampinen, A. K. et al. (2024). Language models, like humans, show content effects on reasoning tasks. *PNAS Nexus* 3(7): pgae233. doi:10.1093/pnasnexus/pgae233
 - Dummett, M. (1976). Is logic empirical? In H. D. Lewis (ed.), *Contemporary British Philosophy*, 4th series.
 - Kleene, S. C. (1952). *Introduction to Metamathematics*. North-Holland.
 - Kripke, S. A. (2024). The question of logic. *Mind* 133(529): 1–36.
 - Padró, R. (2015). *What the Tortoise Said to Kripke: The Adoption Problem and the Epistemology of Logic*. PhD dissertation, CUNY.
+- Parmar, M. et al. (2024). LogicBench: Towards systematic evaluation of logical reasoning ability of large language models. *ACL 2024 (Long Papers)*. aclanthology.org/2024.acl-long.739
+- Patel, N. et al. (2024). Multi-LogiEval: Towards evaluating multi-step logical reasoning ability of large language models. *EMNLP 2024*. aclanthology.org/2024.emnlp-main.1160
 - Priest, G. (1979). The logic of paradox. *Journal of Philosophical Logic* 8.
 - Putnam, H. (1968). Is logic empirical? *Boston Studies in the Philosophy of Science* 5.
 - Putnam, H. (1971). *Philosophy of Logic*. Harper & Row.
