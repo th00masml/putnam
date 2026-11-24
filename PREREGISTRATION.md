@@ -22,3 +22,10 @@ Hypotheses H_a to H_d and their predicted response patterns for the explosion-ch
 the ones in `runs/2026-10-14__explosion-chain/NOTES.md` (written 2026-10-14). The diagnosis is the
 one `chain_section` in `battery/fit.py` prints; a model flagged "no stable logic" gets no diagnosis
 in the paper.
+
+## 2026-11-24: explosion pragmatic-control run
+
+Added before any model has scored `runs/2026-11-24__explosion-pragmatics/items.jsonl`. No analysis
+value above changes. The predicted patterns and their readings are the ones in that run's `NOTES.md`.
+A difference between conditions counts only if it crosses the 0.5 cut for the mean P(yes) of the
+cell; smaller shifts are reported but not interpreted.

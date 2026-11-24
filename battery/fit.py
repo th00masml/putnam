@@ -128,7 +128,7 @@ def model_section(name, recs):
     cell = defaultdict(list)
     for r in recs:
         cell[(r["schema"], r["content"])].append(r["p_yes"])
-    contents = ["everyday", "nonsense", "symbolic"]
+    contents = [c for c in ["everyday", "nonsense", "symbolic", "related"] if any(r["content"] == c for r in recs)]
     out.append("### Mean P(yes) by schema and content\n")
     out.append("| Schema | " + " | ".join(contents) + " | " + " | ".join(LOGICS) + " |")
     out.append("|---|" + "---:|" * len(contents) + ":-:|" * len(LOGICS))
@@ -138,6 +138,19 @@ def model_section(name, recs):
         vals = [f"{sum(cell[(s, c)]) / len(cell[(s, c)]):.2f}" if cell[(s, c)] else "" for c in contents]
         out.append(f"| {s} | " + " | ".join(vals) + " | " + " | ".join(marks) + " |")
     out.append("")
+
+    framings = sorted({r["framing"] for r in recs})
+    if "formal" in framings:
+        fcell = defaultdict(list)
+        for r in recs:
+            fcell[(r["schema"], r["framing"])].append(r["p_yes"])
+        out.append("### Mean P(yes) by schema and framing\n")
+        out.append("| Schema | " + " | ".join(framings) + " |")
+        out.append("|---|" + "---:|" * len(framings))
+        for s in [s for s in ALL_SCHEMATA if any(fcell[(s, f)] for f in framings)]:
+            vals = [f"{sum(fcell[(s, f)]) / len(fcell[(s, f)]):.2f}" if fcell[(s, f)] else "" for f in framings]
+            out.append(f"| {s} | " + " | ".join(vals) + " |")
+        out.append("")
 
     fallacy = [r["p_yes"] for r in recs if r["schema"] in FALLACIES]
     order_gap = [abs(r["p_yes_order"][0] - r["p_yes_order"][1]) for r in recs if None not in r["p_yes_order"]]
