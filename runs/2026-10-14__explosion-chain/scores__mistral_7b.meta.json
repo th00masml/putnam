@@ -1,0 +1,16 @@
+{
+  "model": "mistral:7b",
+  "digest": "6577803aa9a036369e481d648a2baebb381ebc6e897f2bb9a766a2aa7bfbc1cf",
+  "options": {
+    "num_predict": 1,
+    "temperature": 0
+  },
+  "top_logprobs": 20,
+  "think": null,
+  "num_thread": null,
+  "items": "items.jsonl",
+  "items_sha256": "3543cab9abab1fea67723012da57c3f09ed0d84e7436cd1681b79207fb4fae67",
+  "n_items": 534,
+  "started": "2026-11-24T19:50:41+0100",
+  "prompt_template": "item['prompt'], and again with 'Answer yes or no.' -> 'Answer no or yes.'"
+}
