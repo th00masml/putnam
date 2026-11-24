@@ -73,8 +73,6 @@ Against the predictions above:
 Post hoc, not preregistered: qwen2.5:7b's whole profile across the three explosion runs (∨-intro yes,
 DS yes, double DS yes, A,¬A,A∨B ⊢ B no, explosion no, A,¬A,C ⊢ C yes, A,¬A ⊢ A no, A,¬A ⊢ A∧¬A no) is
 what inference from maximal consistent subsets predicts, with a conclusion accepted only if it follows
-from every maximal consistent subset of the premises (Rescher & Manor 1970, from memory, verify before
-citing). That consequence relation is not reflexive (A, ¬A ⊬ A), so it is none of the six candidate
-logics. It needs its own preregistered run before it goes in the paper. A discriminating item:
-A∧C, ¬A ⊢ C, which universal maximal-consistent-subset inference rejects and "ignore the contradicted
-atom" accepts.
+from every maximal consistent subset of the premises (Rescher & Manor 1970,
+*Theory and Decision* 1(2): 179–217). That consequence relation is not reflexive (A, ¬A ⊬ A), so it is none of the six candidate
+logics. It needs its own preregistered run before it goes in the paper: `../2026-11-24__mcs-inference/`.

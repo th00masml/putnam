@@ -50,4 +50,14 @@ INCONSISTENCY_SCHEMATA = {
     "adjunction_inconsistent": ([A, neg(A)], conj(A, neg(A))),       # restating the contradiction itself
 }
 
-ALL_SCHEMATA = {**SCHEMATA, **CHAIN_SCHEMATA, **INCONSISTENCY_SCHEMATA}
+# Second follow-up: which consequence relation for inconsistent premise sets (battery/mcs.py) fits?
+# shared_conjunct separates free from universal MCS inference; clean_conjunct separates universal MCS inference
+# from discarding only the contradicted atom; the ∨-intro item separates existential inference from the rest.
+MCS_SCHEMATA = {
+    "conjunction_elimination": ([conj(A, C)], C),                                  # control, consistent
+    "shared_conjunct": ([conj(A, C), conj(C, neg(A))], C),          # C first: "both C and not-A" has no scope ambiguity
+    "clean_conjunct": ([conj(A, C), neg(A)], C),
+    "disjunction_introduction_inconsistent": ([A, neg(A)], disj(A, B)),
+}
+
+ALL_SCHEMATA = {**SCHEMATA, **CHAIN_SCHEMATA, **INCONSISTENCY_SCHEMATA, **MCS_SCHEMATA}

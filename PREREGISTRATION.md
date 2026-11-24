@@ -42,3 +42,12 @@ explosion-chain `NOTES.md`); the paper reports the full profile, not the label.
 
 Added before scoring: `runs/2026-11-24__inconsistent-premises/` (predictions in its `NOTES.md`), on the
 four explosion-chain models.
+
+## 2026-11-24: MCS-inference follow-up
+
+Added before any model has scored `runs/2026-11-24__mcs-inference/items.jsonl`. Hypothesis (formed post
+hoc from qwen2.5:7b's profile): inference from inconsistent premises follows universal maximal-consistent-
+subset consequence. Candidates, predictions, the confirmatory model and the decision rule (including the
+0.40–0.60 inconclusive band for the deciding schema) are in that run's `NOTES.md`; the candidate
+relations are computed by `battery/mcs.py` and printed by `fit.py` (`mcs_section`). No earlier frozen
+value changes.

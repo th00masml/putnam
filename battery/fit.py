@@ -19,6 +19,7 @@ from collections import defaultdict
 from scipy.special import betainc, betaln
 
 from logics import LOGICS
+from mcs import mcs_verdicts
 from schemata import ALL_SCHEMATA, SCHEMATA
 
 COND_FREE = ["distribution", "excluded_middle", "double_negation_elim", "explosion", "disjunctive_syllogism", "non_contradiction"]
@@ -94,6 +95,36 @@ def chain_section(mean):
         out.append(f"Two chained DS steps without a contradiction: {mean['double_ds']:.2f} "
                    + ("(chaining itself works; the failure is specific to inconsistent premises)." if mean["double_ds"] > 0.5
                       else "(chaining fails even without a contradiction)."))
+    return [" ".join(out) + "\n"]
+
+
+MCS_RUN = ["conjunction_elimination", "shared_conjunct", "clean_conjunct", "disjunction_introduction_inconsistent",
+           "identity_inconsistent", "bystander_inconsistent", "explosion_lemma"]
+# Rows not given by a consequence relation in mcs.py, written by hand before the run (see its NOTES.md).
+MCS_HAND_ROWS = {
+    "discard the contradicted atom": [True, True, True, False, False, True, False],
+    "global contradiction aversion": [True, False, False, False, False, False, False],
+}
+
+
+def mcs_section(mean):
+    """MCS follow-up: which relation for inconsistent premise sets matches the binarised profile?"""
+    shown = [s for s in MCS_RUN if s in mean]
+    rows = {f"MCS {rel}": [mcs_verdicts(*ALL_SCHEMATA[s])[rel] for s in shown] for rel in ("free", "universal", "existential")}
+    rows.update({k: [v for s, v in zip(MCS_RUN, vals) if s in mean] for k, vals in MCS_HAND_ROWS.items()})
+    profile = [mean[s] > YES_CUT for s in shown]
+    dist = {k: sum(a != b for a, b in zip(v, profile)) for k, v in rows.items()}
+    best = min(dist.values())
+    winners = [k for k, d in dist.items() if d == best]
+    out = ["**Inconsistent-premise relation.** Binarised profile ("
+           + ", ".join(f"{s} {'yes' if p else 'no'}" for s, p in zip(shown, profile)) + "). Mismatches per candidate: "
+           + "; ".join(f"{k} {d}" for k, d in dist.items()) + "."]
+    if best == 0 and len(winners) == 1:
+        out.append(f"Matches {winners[0]} exactly.")
+    elif best == 0:
+        out.append("Matches " + " and ".join(winners) + " exactly; this run cannot separate them.")
+    else:
+        out.append("No exact match; closest: " + ", ".join(winners) + ". No relation is assigned.")
     return [" ".join(out) + "\n"]
 
 
@@ -178,6 +209,8 @@ def model_section(name, recs):
 
     mean = {s: sum(r["p_yes"] for r in recs if r["schema"] == s) / max(1, sum(r["schema"] == s for r in recs))
             for s in ALL_SCHEMATA if any(r["schema"] == s for r in recs)}
+    if "shared_conjunct" in mean:
+        out += mcs_section(mean)
     if "disjunction_introduction" in mean:
         out += chain_section(mean)
     elif mean.get("disjunctive_syllogism", 0) > 0.5 > mean.get("explosion", 1):

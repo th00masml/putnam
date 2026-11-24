@@ -2,6 +2,7 @@
 and the hand-derived verdicts for the explosion-chain schemata."""
 
 from logics import LOGICS, verdicts
+from mcs import mcs_verdicts
 from schemata import ALL_SCHEMATA
 
 Y, N, X = True, False, None  # X = undefined (QL conditional)
@@ -27,6 +28,25 @@ EXPECTED = {
     "identity_consistent":      [Y, Y, Y, Y, Y, Y],
     "bystander_inconsistent":   [Y, Y, Y, Y, Y, Y],
     "adjunction_inconsistent":  [Y, Y, Y, Y, Y, Y],
+    # MCS follow-up
+    "conjunction_elimination":  [Y, Y, Y, Y, Y, Y],
+    "shared_conjunct":          [Y, Y, Y, Y, Y, Y],
+    "clean_conjunct":           [Y, Y, Y, Y, Y, Y],
+    "disjunction_introduction_inconsistent": [Y, Y, Y, Y, Y, Y],
+}
+
+# Hand-derived verdicts of the maximal-consistent-subset relations (battery/mcs.py):  free, universal, existential
+EXPECTED_MCS = {
+    "conjunction_elimination":  [Y, Y, Y],
+    "shared_conjunct":          [N, Y, Y],
+    "clean_conjunct":           [N, N, Y],
+    "disjunction_introduction_inconsistent": [N, N, Y],
+    "identity_inconsistent":    [N, N, Y],
+    "bystander_inconsistent":   [Y, Y, Y],
+    "explosion_lemma":          [N, N, Y],
+    "adjunction_inconsistent":  [N, N, N],
+    "explosion":                [N, N, N],
+    "disjunctive_syllogism":    [Y, Y, Y],
 }
 
 
@@ -38,6 +58,12 @@ def main():
             if got[logic] != want:
                 failures += 1
                 print(f"MISMATCH {name} {logic}: table={want} computed={got[logic]}")
+    for name, want in EXPECTED_MCS.items():
+        got = mcs_verdicts(*ALL_SCHEMATA[name])
+        for rel, w in zip(("free", "universal", "existential"), want):
+            if got[rel] != w:
+                failures += 1
+                print(f"MISMATCH {name} {rel}: table={w} computed={got[rel]}")
     columns = {lg: tuple(EXPECTED[s][i] for s in ALL_SCHEMATA) for i, lg in enumerate(LOGICS)}
     if len(set(columns.values())) != len(LOGICS):
         failures += 1
