@@ -78,3 +78,8 @@ Rules applied unchanged: each run's predictions and decision rules in its `NOTES
 reliability rule (answer_mass < 0.5 plays the role of low yes/no mass). The Claude model counts as a second
 confirmatory model only if it passes the reliability rule in the explosion-pragmatics run (the only run with
 fallacy items); otherwise its results are exploratory.
+
+## 2026-11-24: formal-framing result
+
+qwen2.5:7b-instruct: A, ¬A ⊢ A under the formal framing 0.00 (rule: < 0.40), yes-bias control 0.01,
+controls 0.89 and 1.00. Decided as "the no survives the formal definition". Details in the run's `NOTES.md`.

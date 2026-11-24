@@ -54,3 +54,14 @@ plus `formal` (the one-word wording fixed in the pragmatics run). Formal items: 
 
 `bash run.sh`, or the PowerShell loop with `$models = "qwen2.5:7b-instruct"` (add the other three models
 if you want the exploratory rows). `fit.py` prints a schema × framing table because `formal` is present.
+
+## Results (scored 2026-11-24, `report.md`)
+
+qwen2.5:7b-instruct only. Reliability: 1 of 584 items with yes/no mass < 0.5; answer-order gap 0.015.
+
+Mean P(yes) under `formal` (all contents): A, ¬A ⊢ A **0.00**; A, ¬A ⊢ A∧¬A 0.00; A, ¬A, C ⊢ C 0.89;
+A, C ⊢ C 1.00; A∨B ⊢ A 0.01. The other framings give the same picture (A, ¬A ⊢ A: 0.00 / 0.00 / 0.04).
+
+By the decision rule above: primary cell < 0.40, yes-bias control < 0.5, both controls > 0.5. The "no" to
+A, ¬A ⊢ A survives an explicit definition of validity; the pragmatic objection is answered for this model
+and schema. Adjunction (secondary) agrees.

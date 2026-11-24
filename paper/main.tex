@@ -28,7 +28,7 @@ that are on topic and an explicit definition of validity. For the one model that
 check (qwen2.5:7b-instruct), it is not a refusal to reason from inconsistent premises at all: the model
 still concludes $C$ from $A, \neg A, C$ in natural language, but refuses every tested conclusion that
 rests on the contradicted sentence, including $A$ itself from $A, \neg A$, which every candidate logic
-validates. Its departures from classical logic are failures of reflexivity and monotonicity, not of Cut with a
+validates, also when the prompt defines validity explicitly. Its departures from classical logic are failures of reflexivity and monotonicity, not of Cut with a
 shared premise set.
 A pre-specified hypothesis based on maximal consistent subsets (Rescher and Manor) was refuted for this
 model, and its profile instead matched a pre-specified rival exactly: drop what the premises say about the
@@ -185,6 +185,18 @@ reading committed before this run, the ``global aversion'' diagnosis is withdraw
 hermes3:8b and mistral:7b sit just under 0.5 on the bystander item (0.49, 0.46) and are weak on
 restating a premise even without a contradiction.
 
+\subsection{Is the refusal of $A, \neg A \vdash A$ pragmatic?}\label{sec:formal}
+With $A$ and $\neg A$ both given, ``does $A$ follow?'' can be heard as ``is $A$ the case?'', and the
+relevance and formal-definition controls of Section~\ref{sec:pragmatics} were run on explosion only. We
+therefore asked the inconsistent-premise schemata again for qwen2.5:7b, with the formal framing added and
+$A \lor B \vdash A$ (invalid in every logic) as a check that the definition does not simply raise the
+yes-rate. The decision rule was fixed before scoring: below 0.40 on $A, \neg A \vdash A$ under the formal
+framing, with the invalid control below 0.5 and both consistent controls above 0.5, counts as the refusal
+surviving the definition. Table~\ref{tab:formal} shows that it does: 0.00 under the formal framing, as
+under the other three, with the invalid control at 0.01 and the controls at 0.89 and 1.00. Even the
+``Suppose the following are all true\ldots{} must it then be true that $A$?'' framing, which asks
+directly for the conditional reading, gets 0.00.
+
 \subsection{A pre-specified test: maximal consistent subsets}\label{sec:mcs}
 After the previous run, qwen2.5:7b's profile over eight schemata matched consequence from maximal
 consistent subsets (MCS): a conclusion is accepted if it follows classically from every maximal
@@ -247,8 +259,8 @@ has not been tested on items where it and its rivals diverge, such as premises t
 Morgan's laws.
 \item First-token probabilities measure the model's immediate answer, not what it would conclude after
 reasoning. Items are English, template-generated and propositional.
-\item The relevance and formal-definition controls were run on explosion only. A ``no'' to
-$A, \neg A \vdash A$ may have a pragmatic reading (``is $A$ the case?'') that we did not control for.
+\item The formal-definition control for $A, \neg A \vdash A$ (Section~\ref{sec:formal}) was run on
+qwen2.5:7b only; the relevance manipulation was run on explosion only.
 \item Four model families were tested (hermes3 is a fine-tune of Llama 3.1).
 \item The reliability rule's fallacy check is driven mostly by denying the antecedent, a conditional
 schema whose natural-language reading is contested. We kept the rule as frozen.
@@ -280,6 +292,7 @@ Thresholds frozen & 2026-11-24 16:11 UTC & -- \\
 Pragmatic controls & 2026-11-24 17:00 UTC (reworded 17:18) & 2026-11-24 18:57 UTC \\
 Inconsistent premises & 2026-11-24 19:04 UTC & 2026-11-24 19:57 UTC \\
 MCS test & 2026-11-24 20:03 UTC & 2026-11-24 20:12 UTC \\
+Formal-framing check & 2026-11-24 20:30 UTC & 2026-11-24 20:35 UTC \\
 \bottomrule\end{tabular}
 \end{center}
 The explosion-chain hypotheses were written on 2026-10-14; the analysis thresholds applied to that run
