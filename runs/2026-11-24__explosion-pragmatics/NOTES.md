@@ -17,9 +17,9 @@ This run varies both while holding the logical form fixed.
 
 - **Content:** `everyday` (pilot pool: three unrelated sentences) vs `related` (one subject, three of its
   predicates: "the kettle is full, it is not the case that the kettle is full, therefore the kettle is hot").
-- **Framing:** the three pilot framings plus `formal`, which states the classical definition of validity
+- **Framing:** the three pilot framings plus `formal`, which gives the classical definition of validity
   ("valid if and only if there is no possible situation in which all premises are true and the conclusion
-  false") before asking.
+  false") after the argument and asks for a one-word answer.
 - **Schemata:** explosion, DS, explosion_lemma (A, ¬A, A∨B ⊢ B), modus ponens as a valid anchor, and the
   two fallacies as yes-bias controls (the "no stable logic" check in `fit.py` needs them).
 
@@ -47,6 +47,23 @@ Reading:
   is needed to say which step is refused.
 
 Thresholds, decoding and tie bands are the ones frozen in `../../PREREGISTRATION.md`.
+
+## Change before scoring (2026-11-24)
+
+The first version of `formal` put the definition before the argument. In a smoke test on
+qwen2.5:7b-instruct the model restated the definition as a question instead of answering ("Is it true
+that there is no possible situation in which the premises…"), and yes/no got 0.01–0.09 of the
+first-token mass. Three rewordings were compared on 12 formal items × 2 answer orders (qwen2.5:7b-instruct,
+mass of yes+no on the first token):
+
+| Wording | mean mass | min | items < 0.5 |
+|---|---:|---:|---:|
+| definition after the argument | 0.60 | 0.01 | 11/24 |
+| definition inline in the question | 0.94 | 0.25 | 1/24 |
+| definition after the argument + "Reply with one word." | 1.00 | 1.00 | 0/24 |
+
+The last one is used. Only the 120 `formal` items changed; no model had scored the file, and no
+prediction or analysis value changed. The choice was made on answer-token mass only, not on P(yes).
 
 ## Running
 

@@ -53,9 +53,11 @@ FRAMINGS = {
     "valid": "Consider this argument.\n{premises}\nTherefore, {clause}.\nIs this argument logically valid? Answer yes or no.",
 }
 FORMAL_FRAMING = {
-    "formal": "Answer as a question of deductive logic. An argument is valid if and only if there is no possible "
-              "situation in which all of its premises are true and its conclusion is false.\nPremises: {premises}\n"
-              "Conclusion: {sentence}\nIs this argument valid? Answer yes or no.",
+    # Definition after the argument and "Reply with one word": with the definition first, qwen2.5:7b restated it
+    # as a question instead of answering (yes/no first-token mass 0.01-0.09; see the explosion-pragmatics NOTES).
+    "formal": "Premises: {premises}\nConclusion: {sentence}\nIn deductive logic, an argument is valid if and only if "
+              "there is no possible situation in which all of its premises are true and its conclusion is false. "
+              "By that definition, is this argument valid? Reply with one word. Answer yes or no.",
 }
 THEOREM_FRAMINGS = {
     "follows": "Does the following follow from no premises at all (is it a logical truth)? {sentence}\nAnswer yes or no.",
