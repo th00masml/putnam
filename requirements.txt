@@ -1,1 +1,2 @@
 scipy==1.15.3
+anthropic>=2.13  # only for battery/score_api.py

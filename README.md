@@ -23,6 +23,11 @@ pip install -r requirements.txt
 3. `fit.py` ranks logics and writes a Markdown report.
    `python fit.py scores__*.jsonl --out report.md`
 
+For Claude models (no log-probabilities in the API): `python score_api.py --model claude-opus-5-5 --items
+items.jsonl --out scores__claude-opus-5-5.jsonl` sends each item k=5 times per answer order through the
+Message Batches API and writes the same fields; `--dry-run` only counts requests. See the docstring for
+how this measure differs from the local one.
+
 `python test_table.py` checks the gold verdicts against hand-computed truth tables.
 
 ## Runs (`runs/`)

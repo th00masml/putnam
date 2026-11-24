@@ -64,3 +64,17 @@ exploratory until tested in a new preregistered run. Details in the run's `NOTES
 Added before any model has scored `runs/2026-11-24__inconsistent-formal/items.jsonl`, in response to a
 review of the preprint draft. Primary cell, bands and controls are in that run's `NOTES.md`. No earlier
 frozen value changes.
+
+## 2026-11-24: Claude API condition (before any API scoring)
+
+Scorer: `battery/score_api.py` (Message Batches API). The API gives no log-probabilities and current models
+take neither a temperature nor disabled thinking, so P(yes) is the share of "yes" among k = 5 samples per
+answer order (10 per item), after the model's own adaptive thinking at effort `medium`; replies that do not
+start with yes/no, refusals and errors are non-answers and lower `answer_mass`. No refusal fallbacks (they
+would mix models). This is a different measure from the local first-token P(yes) and is reported as a
+separate condition, never pooled with local models.
+
+Rules applied unchanged: each run's predictions and decision rules in its `NOTES.md`, the 0.5 cut, and the
+reliability rule (answer_mass < 0.5 plays the role of low yes/no mass). The Claude model counts as a second
+confirmatory model only if it passes the reliability rule in the explosion-pragmatics run (the only run with
+fallacy items); otherwise its results are exploratory.
