@@ -52,8 +52,8 @@ Thresholds, decoding and tie bands are the ones frozen in `../../PREREGISTRATION
 
 The first version of `formal` put the definition before the argument. In a smoke test on
 qwen2.5:7b-instruct the model restated the definition as a question instead of answering ("Is it true
-that there is no possible situation in which the premises…"), and yes/no got 0.01–0.09 of the
-first-token mass. Three rewordings were compared on 12 formal items × 2 answer orders (qwen2.5:7b-instruct,
+that there is no possible situation in which the premises…"), and yes/no got 0.03 and 0.09 of the
+first-token mass on the one formal item measured. Three rewordings were compared on 12 formal items × 2 answer orders (qwen2.5:7b-instruct,
 mass of yes+no on the first token):
 
 | Wording | mean mass | min | items < 0.5 |

@@ -40,6 +40,12 @@ pip install -r requirements.txt
 Dependencies are pinned in `requirements.txt`; each new score file gets a `.meta.json` with the
 Ollama model digest, decoding options and item-file hash. Pilot score files predate `score.py` writing metadata, so their model digests are not recorded.
 
+## Preprint (`paper/`)
+
+`main.tex` with `refs.bib`; every number comes from `python paper/make_tables.py` (writes `tables.tex`,
+`digests.tex`). Build: `cd paper && latexmk -pdf main.tex`. `arxiv-submission.tar.gz` holds the sources
+plus the compiled `main.bbl`, which arXiv needs because it does not run BibTeX.
+
 ## License
 
 Code: MIT (`LICENSE`). The proposals and reports are not covered by it.

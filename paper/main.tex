@@ -1,0 +1,276 @@
+\documentclass[11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage[numbers,sort]{natbib}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+
+\title{Rejecting Explosion Is Not Paraconsistency:\\How Small Language Models Reason from Inconsistent Premises}
+% TODO(author): replace with your name and affiliation before submission.
+\author{Author Name\\Affiliation\\\texttt{email@example.org}}
+\date{Preprint, November 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Logic benchmarks for language models score answers against classical logic, so a model that accepts
+disjunctive syllogism (DS) but rejects explosion ($A, \neg A \vdash B$) counts as making a classical error,
+or as hinting at a paraconsistent logic. In a pilot on seven local open-weight models (7--30B parameters)
+every model showed exactly this pattern, which fits none of six candidate logics (classical,
+intuitionistic, K3, LP, FDE, orthomodular quantum logic). We ran four follow-up experiments, each with
+predictions committed to version control before scoring. The rejection of explosion survives conclusions
+that are on topic and an explicit definition of validity. It is not a consequence relation of any of the
+six logics, and not a refusal to reason from inconsistent premises at all: the models still conclude
+$C$ from $A, \neg A, C$. What they refuse is any conclusion that rests on the contradicted sentence,
+including $A$ itself from $A, \neg A$, which every candidate logic validates. For the one model that
+passed every reliability check (qwen2.5:7b-instruct), a pre-specified hypothesis based on maximal
+consistent subsets (Rescher and Manor) was refuted, and the model's profile instead matched a
+pre-specified rival exactly: drop what the premises say about the contradicted atom and reason
+classically with the rest. A formalisation of that rival, fixed after the data, agrees with all 14
+schemata we measured for this model. We argue that explosion items in logic benchmarks measure a
+strategy for handling inconsistency, not adherence to a logic, and we report the models and checks that
+did not support these conclusions.
+\end{abstract}
+
+\section{Introduction}
+
+Putnam held that the choice of logic is, in principle, open to revision on empirical grounds
+\citep{putnam1968}, and later that at least one principle, ``not every statement is both true and
+false'', survives every rational revision \citep{putnam1978}. Language models invite a version of the
+first question that can actually be measured: a model's inferential behaviour is learned from text, so
+one can ask which logic, if any, describes it.
+
+We built a battery of inference schemata whose verdicts differ across six candidate logics and asked
+local models whether each argument is valid. The first result was a pattern that none of the six logics
+produces. All seven pilot models accepted DS ($A \lor B, \neg A \vdash B$) and rejected explosion
+($A, \neg A \vdash B$). Classical, intuitionistic and K3 logic validate both; LP and FDE validate
+neither; orthomodular quantum logic validates explosion and rejects DS. The pattern is also puzzling for
+a second reason. C.~I.~Lewis's derivation of explosion \citep{lewis1932} uses only $\lor$-introduction
+($A \vdash A \lor B$), DS, and chaining. A reasoner that accepts both steps but rejects the conclusion
+either has a non-transitive consequence relation or is not applying a consequence relation at all.
+
+This paper reports four follow-up experiments that decide between these readings. Our contributions:
+\begin{itemize}
+\item The rejection of explosion is robust across five model families and does not go away when the
+conclusion is on topic or when the prompt states the classical definition of validity
+(Section~\ref{sec:pragmatics}).
+\item It is not evidence for paraconsistency or for non-transitive consequence: models also reject
+$A, \neg A \vdash A$, valid in every candidate logic, while still accepting $A, \neg A, C \vdash C$
+(Sections~\ref{sec:chain}--\ref{sec:inconsistent}).
+\item For the confirmatory model, a pre-specified hypothesis based on maximal consistent subsets was
+refuted, and a pre-specified rival, ``discard the contradicted atom'', matched exactly
+(Section~\ref{sec:mcs}).
+\item All items, scores, analysis code and the dated record of predictions are released.
+\end{itemize}
+
+\section{Related work}
+
+Benchmarks for logical reasoning in language models score answers against classical logic: rule
+chaining over synthetic theories \citep{clark2020,saparov2023}, first-order reasoning with
+prover-checked annotations \citep{han2024}, single inference rules across propositional, first-order and
+non-monotonic reasoning \citep{parmar2024}, and multi-step combinations of rules \citep{patel2024}. They
+report accuracy against one target. Our question differs: we ask which logic, if any, fits the
+answers, and what a systematic departure from classical logic is.
+\citet{lampinen2024} show that model validity judgements, like human ones, depend on whether the
+conclusion is believable. We control content in a similar spirit, but our manipulation targets relevance
+and inconsistency rather than belief.
+
+The candidate logics are classical logic (CL), intuitionistic logic (IL), strong Kleene logic K3
+\citep{kleene1952}, Priest's LP \citep{priest1979}, first-degree entailment FDE \citep{dunn1976}, and
+orthomodular quantum logic QL \citep{birkhoff1936}, the logic behind Putnam's 1968 proposal. For
+inconsistent premise sets we also consider consequence from maximal consistent subsets
+\citep{rescher1970}.
+
+\section{Method}
+
+\paragraph{Items.}
+Each schema (premises and conclusion over atoms $A, B, C$) is instantiated with everyday sentences
+(``the shop is open''), nonsense sentences (``the blicket is wuggy'') and symbolic notation ($P \land
+\neg Q$), and asked in three framings: ``Does the following conclusion follow from the premises?'',
+``Suppose the following are all true\ldots{} Must it then be true that\ldots?'', and ``Is this argument
+logically valid?''. Every prompt ends with ``Answer yes or no.''. Gold verdicts are computed, not
+hand-labelled: exhaustive truth tables for CL, K3, LP and FDE, a search over Kripke models with up to
+three worlds for IL, and valuations into the smallest non-distributive orthomodular lattice for QL. A
+test file checks the computed verdicts against hand-derived ones.
+
+\paragraph{Scoring.}
+For each item we take the first-token log-probabilities from the model (temperature 0, top 20
+tokens) and compute $P(\text{yes}) = m_{\text{yes}} / (m_{\text{yes}} + m_{\text{no}})$, where $m$ is the
+probability mass on tokens that read ``yes'' or ``no''. Each item is scored twice, with ``Answer yes or
+no'' and ``Answer no or yes'', and the two values are averaged. A cell is read as acceptance when its mean
+$P(\text{yes}) > 0.5$.
+
+\paragraph{Models.}
+All models were run locally through Ollama. The pilot used qwen2.5:7b-instruct, qwen2.5:14b,
+qwen3.5:9b, qwen3.8:27b (both with reasoning disabled), qwen3-coder:30b, hermes3:8b and llama3.1:latest. The follow-ups used
+qwen2.5:7b-instruct, gemma3:12b, hermes3:8b and mistral:7b; llama3.1 was dropped after the first
+follow-up (below). Model digests are listed in Appendix~\ref{app:digests}.
+
+\paragraph{Reliability rule.}
+Fixed before the follow-ups: a model is ``unstable'' in a run if its mean $P(\text{yes})$ on the two
+fallacies (affirming the consequent, denying the antecedent) exceeds 0.25, or if more than 25\% of items
+put less than half of the first-token mass on yes/no in either answer order. Conclusions about an
+unstable model are reported as exploratory. Runs without fallacy items are judged on answer mass only.
+
+\paragraph{Record of predictions.}
+Thresholds and the primary analyses were frozen in a preregistration file before the first follow-up was
+scored; each follow-up's schemata, item file and predicted response patterns were committed before any
+of its scores (commit history in the released repository; Appendix~\ref{app:timeline}). The pilot was
+analysed post hoc and is exploratory. One item set was changed before scoring, and we report it: the
+first version of the ``formal'' framing put the definition of validity first. In a smoke test
+qwen2.5:7b restated the definition as a question instead of answering (yes/no mass 0.03 and 0.09 on the
+formal item measured, and the same restatement on eight further formal items). We compared three
+rewordings on 12 items by answer mass alone and used the one that put all mass on yes/no in all 24
+probes.
+
+\input{tables}
+
+\section{Results}
+
+\subsection{Pilot (exploratory)}
+Table~\ref{tab:pilot} shows the pattern that started the study. DS is accepted (mean
+$P(\text{yes})$ 0.61--1.00) and explosion rejected (0.00--0.28) by all seven models. Five of seven pass
+the reliability rule. On the six conditional-free schemata the fit to each logic is uninformative about
+this pattern: CL is penalised for explosion and LP for DS, so the two tie.
+
+\subsection{Is the rejection pragmatic?}\label{sec:pragmatics}
+Two cheap explanations would dissolve the puzzle. The model may be judging relevance (``the oven is hot
+and not hot, so the lights are off'' is a non sequitur), or it may read ``follows'' conversationally. We
+re-asked explosion with atoms that share a subject (``the kettle is full and not full, so the kettle is
+hot'') and with a framing that states that an argument is valid if and only if no possible situation makes
+all premises true and the conclusion false. Neither manipulation moved any model toward acceptance
+(Table~\ref{tab:pragmatics}); the largest mean is 0.11 for the models we kept. The formal framing did not
+raise the yes-rate on fallacies for qwen2.5:7b (0.09 and 0.31). Four models failed the fallacy check in
+this run, almost entirely through denying the antecedent, which suggests a biconditional reading of
+``if''. We did not change the threshold after seeing this; those models are exploratory from here on.
+llama3.1 also put less than half of the mass on yes/no in 52\% of items and was dropped.
+
+\subsection{Which step of Lewis's argument is refused?}\label{sec:chain}
+We decomposed the derivation: $\lor$-introduction, DS with the inconsistent pair present
+($A, \neg A, A\lor B \vdash B$), two chained DS steps without a contradiction, and, as a check on whether
+anything at all is drawn from inconsistent premises, $A, \neg A \vdash A$. Four hypotheses with written
+predictions were written on 14 October and committed before any of these items were scored.
+Table~\ref{tab:profile} shows the result in the rows for DS, chained DS, $\lor$-introduction, explosion,
+$A, \neg A \vdash A$ and the DS lemma. qwen2.5:7b accepts $\lor$-introduction (0.84), DS (1.00) and
+chained DS (0.85) and rejects the DS lemma with a contradiction present (0.32). It also rejects
+$A, \neg A \vdash A$ (0.01), which every candidate logic validates. This rules out a non-transitive
+consequence relation for this model: it does not accept every step and refuse the conclusion; it refuses
+the step that runs through the contradiction. gemma3:12b is different: it accepts the DS lemma (0.91)
+but not explosion, which is the non-transitive profile, apart from its rejection of $A, \neg A \vdash A$.
+
+\subsection{Global aversion or a local filter?}\label{sec:inconsistent}
+A ``no'' to $A, \neg A \vdash A$ has two readings. Either the model draws nothing from an inconsistent
+premise set, or it treats the premises as conflicting evidence about $A$ and declines to conclude
+anything about $A$. A third schema separates them: $A, \neg A, C \vdash C$. qwen2.5:7b accepts it (0.76;
+0.88--0.98 in natural language, 0.39--0.47 in symbolic notation) and so does gemma3:12b (1.00), while both
+reject restating the contradiction itself ($A, \neg A \vdash A \land \neg A$: 0.00 and 0.39). By the
+reading committed before this run, the ``global aversion'' diagnosis is withdrawn for both models.
+hermes3:8b and mistral:7b sit just under 0.5 on the bystander item (0.49, 0.46) and are weak on
+restating a premise even without a contradiction.
+
+\subsection{A pre-specified test: maximal consistent subsets}\label{sec:mcs}
+After the previous run, qwen2.5:7b's profile over eight schemata matched consequence from maximal
+consistent subsets (MCS): a conclusion is accepted if it follows classically from every maximal
+consistent subset of the premises \citep{rescher1970}. Because that hypothesis was formed after seeing
+the data, we tested it on new items chosen to separate it from four rivals, with the confirmatory model,
+decision rule and an inconclusive band (0.40--0.60 on the deciding item) fixed in advance. The run
+had seven schemata: four new ones ($A \land C \vdash C$, $A \land C, C \land \neg A \vdash C$,
+$A \land C, \neg A \vdash C$ and $A, \neg A \vdash A \lor B$) and three anchors with new instances. The rivals were: consequence from the premises outside every minimal
+inconsistent subset; consequence from at least one MCS; global aversion; and ``discard the contradicted
+atom'', stated informally as: drop what the premises say about an atom they both assert and deny, keep
+everything else, including the other conjunct of a conjunction.
+
+The deciding item for the last rival is $A \land C, \neg A \vdash C$: MCS rejects it, since $\{\neg A\}$
+is a maximal consistent subset that does not entail $C$. qwen2.5:7b accepts it (0.94, 95\% interval
+0.89--0.98). The MCS hypothesis is therefore refuted for the confirmatory model, and the model's
+seven-item profile matches ``discard the contradicted atom'' exactly and uniquely. Among the exploratory
+models, hermes3:8b matched MCS exactly in this run (deciding item 0.39), gemma3:12b matched no candidate
+(it again accepts the DS lemma), and mistral:7b matched none.
+
+\paragraph{A formalisation, fixed after the data.}
+``Discard the contradicted atom'' coincides, on our items, with MCS consequence computed after splitting
+each conjunctive premise into its conjuncts. Across all 14 schemata in Table~\ref{tab:profile} it
+disagrees with qwen2.5:7b on none, against one for plain MCS and five for CL. The relation is
+syntax-sensitive (it treats $A \land C$ differently from the premise pair $A, C$ only before splitting),
+so it is not a consequence relation on propositions. We report it as a description to be tested, not as
+a finding.
+
+\section{Discussion}
+
+\paragraph{What explosion items measure.}
+A benchmark that counts the rejection of explosion as a classical error, or as a sign of a paraconsistent
+logic, misreads it. The models we studied do not reject explosion because they lack $\lor$-introduction
+or DS, and not because they hold a logic in which contradictions are harmless. They reject it because
+they will not draw conclusions that depend on a sentence the premises both assert and deny, and an
+explosion item has no other support for its conclusion. The same strategy makes them reject inferences
+that every candidate logic accepts, such as $A, \neg A \vdash A$.
+
+\paragraph{Relation to Putnam.}
+qwen2.5:7b never concludes $A \land \neg A$ from $A$ and $\neg A$ (mean 0.00). One can read this as a
+behavioural counterpart of Putnam's minimal principle of contradiction \citep{putnam1978}: the model
+does not treat any statement as both true and false. The analogy is limited. Putnam's principle is
+normative and about rational revision; ours is a regularity in a 7B model's answers, and a regularity
+says nothing about whether giving it up could be rational.
+
+\paragraph{Heterogeneity.}
+The models do not share one strategy. gemma3:12b runs DS through a contradiction (0.91) but still
+rejects explosion, a profile none of our candidates predicts. The two weaker models are close to
+refusing everything from inconsistent premises. We do not have a single account that covers all four.
+
+\section{Limitations}
+
+\begin{itemize}
+\item Only qwen2.5:7b-instruct passed every reliability check; the other follow-up models failed the
+fallacy check in the run that had fallacy items, and their profiles are exploratory. All follow-up models
+are local, open-weight and 7--12B parameters. No closed API model or larger model was tested in the
+follow-ups.
+\item The final formalisation (MCS after splitting conjunctions) was written after seeing the data and
+has not been tested on items where it and its rivals diverge, such as premises that split only after De
+Morgan's laws.
+\item First-token probabilities measure the model's immediate answer, not what it would conclude after
+reasoning. Items are English, template-generated and propositional.
+\item The reliability rule's fallacy check is driven mostly by denying the antecedent, a conditional
+schema whose natural-language reading is contested. We kept the rule as frozen.
+\item The record of predictions is a git history; commit timestamps are set by the author's machine.
+% TODO(author): make the repository public or archive it (e.g. Zenodo) before submission and cite the DOI here.
+\end{itemize}
+
+\section*{Code and data availability}
+Items, score files, model digests, analysis code (\texttt{battery/}), the per-run notes with predictions,
+and the script that computes every number in this paper (\texttt{paper/make\_tables.py}) are in the
+project repository.
+% TODO(author): add the public repository URL or archive DOI.
+
+% TODO(author): many venues expect a statement on AI assistance; edit or remove.
+\section*{Use of AI tools}
+Code, analyses and a first draft of this text were prepared with the help of an AI coding assistant.
+The author checked the analyses and is responsible for the content.
+
+\bibliographystyle{plainnat}
+\bibliography{refs}
+
+\appendix
+\section{Timeline of committed predictions}\label{app:timeline}
+\begin{center}\small
+\begin{tabular}{lll}\toprule
+Run & Items and predictions committed & Scores committed \\\midrule
+Explosion chain & 2026-10-14 (notes); repository snapshot 2026-10-25 & 2026-11-24 18:57 UTC \\
+Thresholds frozen & 2026-11-24 16:11 UTC & -- \\
+Pragmatic controls & 2026-11-24 17:00 UTC (reworded 17:18) & 2026-11-24 18:57 UTC \\
+Inconsistent premises & 2026-11-24 19:04 UTC & 2026-11-24 19:57 UTC \\
+MCS test & 2026-11-24 20:03 UTC & 2026-11-24 20:12 UTC \\
+\bottomrule\end{tabular}
+\end{center}
+The explosion-chain hypotheses were written on 2026-10-14; the analysis thresholds applied to that run
+were frozen on 2026-11-24, before it was scored. qwen2.5:7b had been scored on the pragmatic-control run
+before the other models.
+
+\section{Model digests}\label{app:digests}
+\input{digests}
+
+\end{document}
