@@ -60,5 +60,5 @@ The pilot battery output of `generate.py` (no `--schemata`) is byte-identical to
 
 ## Running
 
-`bash run.sh` scores the seven pilot models sequentially (needs Ollama on 127.0.0.1:11434, one model
+`bash run.sh` (set `PYTHON=` if `python` is not on PATH) scores the seven pilot models sequentially (needs Ollama on 127.0.0.1:11434, one model
 on the GPU at a time) and writes `report.md`. Skips models whose score file already has 534 lines.
