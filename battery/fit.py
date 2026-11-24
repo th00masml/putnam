@@ -200,7 +200,8 @@ def main():
         recs = [json.loads(line) for line in open(path, encoding="utf-8")]
         sec, best = model_section(name, recs)
         sections += sec
-        cf, al = best["conditional-free (primary)"], best["all schemata (QL excluded)"]
+        none = ("–", "–")  # no schema of this analysis in the run (e.g. the inconsistent-premises follow-up)
+        cf, al = best.get("conditional-free (primary)", none), best.get("all schemata (QL excluded)", none)
         summary.append(f"| {name} | {cf[0]} | {cf[1]} | {al[0]} | {al[1]} | {best['reliability']} |")
 
     report = ["# Pilot results: logic profiles of local LLMs\n",
